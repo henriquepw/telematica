@@ -37,13 +37,13 @@ def questao03():
     # final mostre a soma, subtração, multiplicação e a
     # divisão dos números lidos.
 
-    num1 = input("Digite um numero")
-    num2 = input("Digite outro")
+    num1 = input("Digite um numero ")
+    num2 = input("Digite outro ")
 
-    print("Soma: ", num1 + num2)
-    print("Subtração: ", num1 - num2)
-    print("Multiplicação: ", num1 * num2)
-    print("Divisão: ", num1 / num2)
+    print "\nSoma: ", num1 + num2
+    print "Subtracao: ", num1 - num2
+    print "Multiplicacao: ", num1 * num2
+    print "Divisao: ", num1 / num2
     
     finale()
 
@@ -51,8 +51,8 @@ def questao03():
 def questao04():
     # Faça um Programa que converta metros para centímetros
 
-    num1 = input("Digite uma medita em metros")
-    print(num1 * 100, " centímetros")
+    num1 = input("Digite uma medita em metros ")
+    print num1 * 100, " cm"
     
     finale()
 
@@ -64,10 +64,10 @@ def questao05():
 
     valorHora = 0.0
     horasMes = 0
-    valorHora = input("Quanto você ganha por hora?")
-    horasMes = input("Quantas horas você traballhou nesse mês?")
+    valorHora = input("Quanto voce ganha por hora? ")
+    horasMes = input("Quantas horas você traballhou nesse mes? ")
 
-    print("Seu Salário nesse referido mês foi: ", valorHora * horasMes)
+    print "Seu Salario nesse referido mes foi R$ %.2f"%(valorHora * horasMes)
     
     finale()
 
@@ -75,7 +75,7 @@ def questao05():
 def questao06():
     # Quantas milhas há em 10 quilômetros?
 
-    print("Em 10 Km há ", 10 / 1.60934, " M")
+    print "Em 10 Km ha ", 10 / 1.60934, " M"
     
     finale()
 
@@ -85,10 +85,10 @@ def questao07():
     # um automóvel sendo fornecida a distância total percorrida pelo
     # automóvel e o total de combustível gasto.
 
-    num1 = input("Digite a distância total percorrida")
-    num2 = input("Digite o total de combustível gastoo")
+    num1 = input("Digite a distancia total percorrida ")
+    num2 = input("Digite o total de combustivel gasto ")
 
-    print("Consumo médio:  ", num1 / num2)
+    print "Consumo médio:  ", num1 / num2
     
     finale()
 
@@ -99,10 +99,10 @@ def questao08():
     # algoritmo deverá solicitar o valor da cotação do dólar e também a
     # quantidade de dólares disponíveis com o usuário.
 
-    num1 = input("Digita a contação do dólar")
-    num2 = input("Agora o valor em dólar há ser convertido")
+    num1 = input("Digita a contação do dolar ")
+    num2 = input("Agora o valor em dólar há ser convertido ")
 
-    print(num2, " US$ equivale há ", num2 * num1, " R$")
+    print num2, " US$ equivale ha ", num2 * num1, " R$" 
     
     finale()
 
@@ -114,9 +114,9 @@ def questao09():
     num = input("Digite um numero inteiro positivo")
 
     if (num < 0):
-        print("O número não é positivo, tente novamente")
+        print("O numero nao e positivo, tente novamente")
     else :
-        print(num * 2, "é o dobro de ", num)    
+        print(num * 2, "e o dobro de ", num)    
         
     finale()
 
@@ -128,11 +128,11 @@ def questao10():
     nota1 = 6
     nota2 = 4
 
-    num1 = input("Primeira nota")
-    num2 = input("Segunda nota")
+    num1 = input("Primeira nota ")
+    num2 = input("Segunda nota ")
     media = ((num1*nota1)+(num2*nota2))/(nota1+nota2)
 
-    print("Media: ", media)
+    print "Media: ", media
     
     finale()
 
@@ -141,8 +141,8 @@ def questao11():
     # Escreva um algoritmo para calcular e exibir o comprimento de uma
     # circunferência, sendo dada o valor de seu raio ( (∏R2)
 
-    num1 = input("Informe o raio")
-    print("circunferência de raio ", num1, "equivale há ", 3.1415*num1**2)
+    num1 = input("Informe o raio ")
+    print "circunferência de raio ", num1, "equivale há ", 3.1415*num1**2 
     
     finale()
 
@@ -154,7 +154,7 @@ def questao12():
     F = 0.0
     F = input("Digite uma temperatura em F")
     C = (5 * (F - 32) / 9)
-    print(F, "Fahrenheit = ", C, " Celsius")
+    print F, "Fahrenheit = ", C, " Celsius" 
     
     finale()
 
@@ -169,7 +169,7 @@ def questao13():
     h = input("Agora a altura")
     formula = (b*h)/2
 
-    print("Área do triângulo de base ", b, "e altura ", h, "é: ", formula)
+    print "Área do triângulo de base ", b, "e altura ", h, "é: ", formula 
     
     finale()
 
@@ -179,15 +179,15 @@ def questao14():
     # conteúdo entre elas.
 
     var1 = var2 = var3 = 0
-    var1 = input("Primeira variável")
-    var2 = input("Segunda variável")
+    var1 = input("Primeira variável ")
+    var2 = input("Segunda variável ")
 
     var3 = var1
     var1 = var2
     var2 = var3
 
-    print("Primeira variável: ", var1)
-    print("Segunda variável: ", var2)
+    print "Primeira variável: ", var1
+    print "Segunda variável: ", var2
     
     finale()
 
@@ -198,16 +198,16 @@ se = 1
 
 def menu(se):
 	i = 1;
-	print ("// --------------------------- \\\ \n")
+	print ("// ------------------------------- \\\ \n")
 
 	while (i <= final):
 		if (se == i):
-			print "      [>] ========= Q ", i, "\n"
+			print "      [>] ========= Questao ", i, "\n"
 		else:
-			print "      [ ] ========= Q ", i, "\n"
+			print "      [ ] ========= Questao ", i, "\n"
 		i+= 1
 				
-	print ("\\\ --------------------------- // \n")
+	print ("\\\ ------------------------------- // \n")
 
 options = {1 : questao01,
            2 : questao02,
