@@ -1,24 +1,35 @@
-# Aula 3 - Conceitos importantes
-# Tipos de dados, constantes, variaveis e expressoes aritmeticas
+# -*- coding: UTF-8 -*-
 
-# -*- coding: utf-8 -*-
+from msvcrt import getch
+import os
+
+
 num1 = 0.0
 num2 = 0.0
 
 
+def finale():
+	print("\nPessione qualquer tecla para voltar ao menu...")
+	x = getch()
+	os.system('cls')
+    
+    
 def questao01():
     # Hello, World
-
-    print("Hello, World");
-
+    print("Hello, World")
+    
+    finale()
+	
 
 def questao02():
     # Faça um Programa que peça um número e então
     # mostre a mensagem O número informado foi
     # [número].
 
-    num1 = input("Digite um numero")
-    print("O número informado foi [", num1, "]")
+    num1 = input("Digite um numero ")
+    print "O numero informado foi [",num1,"]"
+    
+    finale()
 
 
 def questao03():
@@ -33,6 +44,8 @@ def questao03():
     print("Subtração: ", num1 - num2)
     print("Multiplicação: ", num1 * num2)
     print("Divisão: ", num1 / num2)
+    
+    finale()
 
 
 def questao04():
@@ -40,6 +53,8 @@ def questao04():
 
     num1 = input("Digite uma medita em metros")
     print(num1 * 100, " centímetros")
+    
+    finale()
 
 
 def questao05():
@@ -53,12 +68,16 @@ def questao05():
     horasMes = input("Quantas horas você traballhou nesse mês?")
 
     print("Seu Salário nesse referido mês foi: ", valorHora * horasMes)
+    
+    finale()
 
 
 def questao06():
     # Quantas milhas há em 10 quilômetros?
 
     print("Em 10 Km há ", 10 / 1.60934, " M")
+    
+    finale()
 
 
 def questao07():
@@ -70,6 +89,8 @@ def questao07():
     num2 = input("Digite o total de combustível gastoo")
 
     print("Consumo médio:  ", num1 / num2)
+    
+    finale()
 
 
 def questao08():
@@ -82,6 +103,8 @@ def questao08():
     num2 = input("Agora o valor em dólar há ser convertido")
 
     print(num2, " US$ equivale há ", num2 * num1, " R$")
+    
+    finale()
 
 
 def questao09():
@@ -93,7 +116,9 @@ def questao09():
     if (num < 0):
         print("O número não é positivo, tente novamente")
     else :
-        print(num * 2, "é o dobro de ", num)
+        print(num * 2, "é o dobro de ", num)    
+        
+    finale()
 
 
 def questao10():
@@ -108,6 +133,8 @@ def questao10():
     media = ((num1*nota1)+(num2*nota2))/(nota1+nota2)
 
     print("Media: ", media)
+    
+    finale()
 
 
 def questao11():
@@ -116,6 +143,8 @@ def questao11():
 
     num1 = input("Informe o raio")
     print("circunferência de raio ", num1, "equivale há ", 3.1415*num1**2)
+    
+    finale()
 
 
 def questao12():
@@ -126,6 +155,8 @@ def questao12():
     F = input("Digite uma temperatura em F")
     C = (5 * (F - 32) / 9)
     print(F, "Fahrenheit = ", C, " Celsius")
+    
+    finale()
 
 
 def questao13():
@@ -139,6 +170,8 @@ def questao13():
     formula = (b*h)/2
 
     print("Área do triângulo de base ", b, "e altura ", h, "é: ", formula)
+    
+    finale()
 
 
 def questao14():
@@ -155,3 +188,58 @@ def questao14():
 
     print("Primeira variável: ", var1)
     print("Segunda variável: ", var2)
+    
+    finale()
+
+
+init = 1
+final = 14
+se = 1
+
+def menu(se):
+	i = 1;
+	print ("// --------------------------- \\\ \n")
+
+	while (i <= final):
+		if (se == i):
+			print "      [>] ========= Q ", i, "\n"
+		else:
+			print "      [ ] ========= Q ", i, "\n"
+		i+= 1
+				
+	print ("\\\ --------------------------- // \n")
+
+options = {1 : questao01,
+           2 : questao02,
+           3 : questao03,
+           4 : questao04,
+           5 : questao05,
+           6 : questao06,
+           7 : questao07,
+           8 : questao08,
+           9 : questao09,
+           10 : questao10,
+           11 : questao11,
+           12 : questao12,
+           13 : questao13,
+           14 : questao14,}
+
+key = 0
+while key != 27:
+	menu(se)
+	key = int(ord(getch()))
+	os.system('cls')
+	
+	if(key == 119):
+		if(se <= init):
+			se = final
+		else:
+			se-= 1
+	if(key == 115):
+		if(se >= final):
+			se = init
+		else:
+			se+= 1
+			
+	if(key == 13):
+		options[se]()
