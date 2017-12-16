@@ -16,6 +16,5 @@ def questao01():
 
 
 def questao02():
-    dados = input()
-    numero = [float(x) for x in dados.split(" ")]
+    numero = [float(x) for x in input().split(" ")]
     print("%.2f" % (numero[0]/numero[1]))
