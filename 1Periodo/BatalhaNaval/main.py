@@ -1,71 +1,103 @@
-# -*- coding: utf-8 -*-
-from random import randint
+# encoding: utf-8
+from msvcrt import getch
+from os import system
 
-attack = {}
-defense = {}
-
-'''
-
-5 = 1x Porta-aviões
-4 = 2x Encouraçados 
-3 = 3x Cruzadores 
-2 = 4x subimarinos
-
-'''
+clear = '\033[m'
+destaque = '\033[1;33m'
 
 
-def crange(c1, c2):
-    yield from range(ord(c1), ord(c2) + 1)
+def regras():
+    print(destaque, 'Regras do jogo \n', clear)
+
+    print(destaque, ' Armas disponíveis: ', clear)
+    print('    - 4 Subimarinos  [ ][ ]')
+    print('    - 3 Cruzadores   [ ][ ][ ]')
+    print('    - 2 Encouraçados [ ][ ][ ][ ]')
+    print('    - 1 Porta-aviões [ ][ ][ ][ ][ ] \n')
+
+    print(destaque, ' Tabuleiro: ', clear)
+    print('    - São duas grelhas para cada jogador.')
+    print('    - Uma que representa a disposição dos barcos do jogador, e outra que representa a do oponente. ')
+    print('    - As grelhas são quadradas(10 x 10), estando identificadas na horizontal por números e na vertical'
+          ' por letras. \n')
+
+    print(destaque, ' Preparação: ', clear)
+    print('    - Você distribui seus navios pelo tabuleiro. Podem ser marcado em linha horizontais ou verticais.')
+    print('    - Não é permitido que 2 navios se toquem. \n')
+
+    print(destaque, ' Jogando: ', clear)
+    print('    - Disparará 3 tiros, indicando a coordenadas do alvo através da letra da linha e do '
+          'número da coluna que definem a posição, segundo o exemplo. Ex: A-1.')
+    print('    - Após cada um dos tiros, o jogo avisará se acertou e, nesse caso, qual a arma foi '
+          'atingida. Se ela for afundada, esse fato também deverá ser informado.')
+    print('    - Uma arma é afundada quando todas as casas que formam essa arma forem atingidas.')
+    print('    - O jogo termina quando um dos jogadores afundar todas as armas do seu oponente. \n')
+
+    print(destaque, '\nPressione qualquer tecla para voltar ao menu ...', clear)
+    getch()
 
 
-def init():
-    for c in crange('A', 'J'):
-        attack[chr(c)] = [0 for k in range(10)]
-        defense[chr(c)] = [0 for k in range(10)]
-
-    for i in range(2, 6):
-        preencher(i, 6 - i)
+def play():
+    print()
 
 
-def preencher(tipo, quantidade):
-    c = 0
-    while c < quantidade:
-        sentido = randint(0, 1)
+def creditos():
+    print(destaque, 'Creditos: ', clear)
+    print('  - Henrique M. Miranda')
+    print('  - Henrique M. Miranda')
+    print('  - Henrique M. Miranda')
+    print(destaque, '\nPressione qualquer tecla para voltar ao menu ...', clear)
+    getch()
 
-        if sentido == 0:
-            linha = chr(randint(ord('A'), ord('J')))
-            coluna = randint(0, 10 - tipo)
 
-            confirmed = True
-            for i in range(tipo):
-                if defense[linha][coluna + i] != 0:
-                    confirmed = False
+def menu(se):
+    men = ['Iniciar', 'Regras', 'Créditos']
+    i = 0
 
-            if confirmed:
-                for i in range(tipo):
-                    defense[linha][coluna + i] = tipo
-                c += 1
+    print(destaque, '\n', ' ' * 1, '** Batalha Naval v1.0 **\n', clear)
+    print('// ', '-' * 23, ' \\\ \n')
 
+    while i < len(men):
+        if se == i:
+            print(' ' * 8, '[\033[1;33m>\033[m] ', men[i], ' \n')
         else:
-            linha = chr(randint(ord('A'), ord('K') - tipo))
-            coluna = randint(0, 9)
+            print(' ' * 8, '[ ] ', men[i], ' \n')
 
-            confirmed = True
-            for i in range(tipo):
-                if defense[chr(ord(linha) + i)][coluna] != 0:
-                    confirmed = False
+        i += 1
 
-            if confirmed:
-                for i in range(tipo):
-                    defense[chr(ord(linha) + i)][coluna] = tipo
-                c += 1
+    print('\\\ ', '-' * 23, ' // \n')
+    print(destaque, '*W: pra subir', clear)
+    print(destaque, '*S: pra descer', clear)
+    print(destaque, '*Pressione ESC para fechar ', clear)
 
 
-def bloco(bloco):
-    for c in crange('A', 'J'):
-        print(bloco[chr(c)])
+def intera(init=0, final=2, se=0):
+    options = {0: play,
+               1: regras,
+               2: creditos, }
+
+    key = 0
+    while key != 27:
+        system('cls')
+        menu(se)
+        key = int(ord(getch()))
+        system('cls')
+
+        if key == 119:
+            if se <= init:
+                se = final
+            else:
+                se -= 1
+        if key == 115:
+            if se >= final:
+                se = init
+            else:
+                se += 1
+
+        if key == 13:
+            options[se]()
 
 
 if __name__ == '__main__':
-    init()
-    bloco(defense)
+    system('cls')
+    intera()
