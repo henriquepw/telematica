@@ -22,11 +22,13 @@ def crange(c1, c2):
 
 
 # inicia os tabulheiros
-def init():
+def init(tam):
+    global tamanho
+    tamanho = tam
     for c in range(tamanho):
         defense.append([0 for k in range(tamanho)])
 
-    for i in range(2, 6):
+    for i in range(2, 3):
         preencher(i, 6 - i)
 
     return copy.deepcopy(defense)

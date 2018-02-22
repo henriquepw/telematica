@@ -1,6 +1,6 @@
-import copy
 from msvcrt import getch
 from os import system
+
 import opponent
 
 # variaveis
@@ -8,7 +8,7 @@ import opponent
 clear = '\033[m'
 destaque = '\033[1;33m'
 
-tamanho = 10
+tamanho = 12
 letra = []
 sequencia = []
 
@@ -19,7 +19,7 @@ for l in range(tamanho):
 
 mapa = []
 mapa_jogador = [[0 for i in range(tamanho)] for j in range(tamanho)]
-mapa_maquina = opponent.init()
+mapa_maquina = opponent.init(tamanho)
 
 
 def regras():
@@ -38,8 +38,7 @@ def regras():
           ' por letras. \n')
 
     print(destaque, ' Preparação: ', clear)
-    print('    - Você distribui seus navios pelo tabuleiro. Podem ser marcado em linha horizontais ou verticais.')
-    print('    - Não é permitido que 2 navios se toquem. \n')
+    print('    - Você distribui seus navios pelo tabuleiro. Podem ser marcado em linha horizontais ou verticais. \n')
 
     print(destaque, ' Jogando: ', clear)
     print('    - Disparará 3 tiros, indicando a coordenadas do alvo através da letra da linha e do '
@@ -111,7 +110,10 @@ def intera(init=0, final=2, se=0):
             options[se]()
 
 
-# feito por junior
+'''
+parte do jogador
+'''
+
 
 def imprime_mapa(mapa):
     for i in range(tamanho):
@@ -121,37 +123,43 @@ def imprime_mapa(mapa):
 
 
 # novo print
-def print_mapas(mapa1):
-    print(' Ataque x Defesa')
-    line = ' '
-    for x in range(tamanho):
-        if x <= 9:
-            line += ' 0' + str(x)
-        else:
-            line += ' ' + str(x)
+def print_mapas():
+    global mapa_maquina
+    global mapa_jogador
+
+    print('\n', ' ' * 23, 'Ataque x Defesa')
+    line = ''
+    for a in range(2):
+        for x in range(tamanho):
+            if x <= 9:
+                line += ' 0' + str(x)
+            else:
+                line += ' ' + str(x)
+
+        line += '    '
 
     print(line)
     for i in range(tamanho):
-        line = '' + letra[i] + ' '
+        line = ' '
 
         for j in range(tamanho):
-            if mapa1[i][j] == 1:
+            if mapa_maquina[i][j] == 1:
                 line += '\033[7;31m[X]\033[m'
-            elif mapa1[i][j] == 6:
+            elif mapa_maquina[i][j] == 6:
                 line += '\033[7;32m[V]\033[m'
             else:
-                line += '\033[7;30m[ ]\033[m'
+                line += '\033[7;34m[ ]\033[m'
 
-        '''
-        line += ' | '
+        line += ' {} '.format(letra[i])
 
         for j in range(tamanho):
-            if mapa2[i][j] == 1:
+            if mapa_jogador[i][j] == 1:
                 line += '\033[7;31m[X]\033[m'
-            elif mapa2[i][j] == 6:
+            elif mapa_jogador[i][j] == 6:
                 line += '\033[7;32m[V]\033[m'
             else:
-                line += '\033[7;30m[ ]\033[m' '''
+                line += '\033[7;34m[ ]\033[m'
+
         print(line)
 
 
@@ -192,9 +200,9 @@ def player_posiciona_navio(mapa, embarcacoes):
 
 
 def verifica(mapa, navio, x, y, sentido):
-    if sentido == "h" and y + navio > 10:
+    if sentido == "h" and y + navio > tamanho:
         return False
-    elif sentido == "v" and x + navio > 10:
+    elif sentido == "v" and x + navio > tamanho:
         return False
     else:
         if sentido == "h":
@@ -220,14 +228,19 @@ def h_ou_v():
 def recebe_coordenada():
     while True:
         while True:
-            y = input("Escolha a coluna no intervalo de 0-%d: "%(tamanho-1))
+            y = input("Escolha a coluna no intervalo de 0-%d: " % (tamanho - 1))
             if y.isdigit():
                 y = int(y)
                 break
             else:
                 print('Digite apenas digitos')
 
-        x = input("Escolha a linha no intervalo A-J: ").upper()
+        while True:
+            x = input("Escolha a linha no intervalo A-{}: ".format(chr(ord('A') + tamanho - 1))).upper()
+            if x.isalpha():
+                break
+            else:
+                print('Digite apenas letras')
 
         if all(z != y for z in sequencia):
             print("Coordenada Y invalida tente novamente.")
@@ -242,9 +255,9 @@ def recebe_coordenada():
 
 
 def vencedor(mapa):
-    for i in range(10):
-        for j in range(10):
-            if mapa[i][j] != 0 and mapa[i][j] != "*" and mapa[i][j] != "#":
+    for i in range(tamanho):
+        for j in range(tamanho):
+            if mapa[i][j] != 0 and mapa[i][j] != 1 and mapa[i][j] != 6:
                 return False
     return True
 
@@ -267,49 +280,56 @@ def que_tiro_foi_esse(mapa, x, y):
 def movimento(mapa, x, y):
     if mapa[x][y] == 0:
         return "Errou!"
-    elif mapa[x][y] == '*' or mapa[x][y] == "#":
-        return "Tente Novamente"
+    elif mapa[x][y] == 1 or mapa[x][y] == 6:
+        return "Você já atirou ai. Tente Novamente"
     else:
         return "Acertou!"
 
 
 def player_atirando(mapa):
-    while True:
+    conf = True
+    while conf:
         x, y = recebe_coordenada()
         mov = movimento(mapa, x, y)
+
         if mov == "Acertou!":
-            print("Atingiu " + str(x) + "," + str(y))
-            que_tiro_foi_esse(mapa, x, y)
-            mapa[x][y] = "#"
+            print("Atingiu " + str(x) + "-" + str(y))
+            # que_tiro_foi_esse(mapa, x, y)
+            mapa[x][y] = 6
+
             if vencedor(mapa):
                 return "VITORIA"
         elif mov == "Errou!":
-            print("O tiro " + str(x) + "," + str(y) + " nao atingiu nenhum alvo.")
+            print("O tiro " + str(x) + "-" + str(y) + " nao atingiu nenhum alvo.")
+            mapa[x][y] = 1
+            conf = False
 
         if mov != "Tente Novamente":
             return mapa
 
 
 def main():
+    global mapa_jogador
+    global mapa_maquina
+
     # tipos de navios
     navios = ['Subimarinos',
               'Cruzadores',
               'Encouraçados',
               'Porta-aviões']
 
+    '''
     # setando um mapa
     mapa = []
     for i in range(tamanho):
         linha = []
         for j in range(tamanho):
             linha.append(0)
-        mapa.append(linha)
+        mapa.append(linha) 
 
     # setando player/maquina
     mapa_jogador = copy.deepcopy(mapa)
-
-    # adicionando navios
-    # mapa_jogador.append(copy.deepcopy(navios))
+    '''
 
     # posicionando navios
     mapa_jogador = player_posiciona_navio(mapa_jogador, navios)
@@ -318,35 +338,56 @@ def main():
     while 1:
 
         # movimento do jogador
-        print_mapas(mapa_maquina)
+        system('cls')
+        print_mapas()
         mapa_maquina = player_atirando(mapa_maquina)
+        system('cls')
+        print_mapas()
 
         # verifica se player ganhou
         if mapa_maquina == "VITORIA":
-            print("Jogador vendeu!!")
-            quit()
+            print(destaque, "Você VENCEU!!!", clear)
+            print(destaque, '\nPressione qualquer tecla para voltar ao menu ...', clear)
+            getch()
+            break
 
-            # exibe o mapa do maquina atual
-            print_mapas(mapa_maquina)
         input("Pressione enter para finalizar a jogada")
 
         '''
         computer move
         felipe tem que colocar aqui a jogada da maquina
         mapa_jogador = maquina_atirando(mapa_jogador)
+        
         '''
 
         # verifica a jogada da maquina
         if mapa_jogador == "VITORIA":
-            print("A Maquina VENCEU!!!")
-            quit()
+            print(destaque, "A Maquina VENCEU!!!", clear)
+            print(destaque, 'Pressione qualquer tecla para voltar ao menu ...', clear)
+            getch()
+            break
 
         # exibe o mapa do jogador atual
-        print_mapas(mapa_jogador)
+        system('cls')
+        print_mapas()
         input("Para finalizar o turno da maquina pressione ENTER")
 
 
 if __name__ == '__main__':
     system('cls')
-    main()
-    # intera()
+    imprime_mapa(mapa_maquina)
+
+    # loop principal do jogo
+    while 1:
+
+        # movimento do jogador
+        system('cls')
+        print_mapas()
+        mapa_maquina = player_atirando(mapa_maquina)
+
+        # verifica se player ganhou
+        if mapa_maquina == "VITORIA":
+            print(destaque, "Você VENCEU!!!", clear)
+            print(destaque, 'Pressione qualquer tecla para voltar ao menu ...', clear)
+            getch()
+            quit()
