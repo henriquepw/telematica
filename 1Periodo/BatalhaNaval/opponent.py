@@ -1,5 +1,6 @@
 # encoding: utf-8
 from random import randint
+import copy
 
 attack = []
 defense = []
@@ -22,16 +23,13 @@ def crange(c1, c2):
 
 # inicia os tabulheiros
 def init():
-    mapa_maquina = []
     for c in range(tamanho):
-        mapa_maquina.append([0 for k in range(tamanho)])
+        defense.append([0 for k in range(tamanho)])
 
     for i in range(2, 6):
         preencher(i, 6 - i)
 
-    return mapa_maquina
-
-
+    return copy.deepcopy(defense)
 
 
 # verifica os arredores das posições dos navios
@@ -54,11 +52,9 @@ def verificar(linha, coluna, confirmed):
 
     for li in range(linha_verificar[0], linha_verificar[1]):
         for co in range(coluna_verificar[0], coluna_verificar[1]):
-            print('li ', li)
-            print('co', co)
             if defense[li][co] != 0:
                 confirmed = False
-                print('entrou')
+                # print('entrou')
     return confirmed
 
 
@@ -79,9 +75,6 @@ def preencher(tipo, quantidade):
             # confirmando se a posição que foi aleatorizada está livre
             confirmed = True
             for i in range(tipo):
-                print('linha', linha)
-                print('coluna', coluna)
-                print('coluna + tipo', coluna + i)
                 confirmed = verificar(linha, coluna + i, confirmed)
 
                 if defense[linha][coluna + i] != 0:
@@ -93,29 +86,18 @@ def preencher(tipo, quantidade):
                     defense[linha][coluna + i] = tipo
                 c += 1
 
-                print_mapas(defense)
-                print(confirmed)
-                print('------------')
-
         else:
             linha = randint(0, tamanho - tipo)
             coluna = randint(0, tamanho - 1)
 
             confirmed = True
             for i in range(tipo):
-                print('linha', linha)
-                print('coluna', coluna)
-                print('linha + tipo', linha + i)
                 confirmed = verificar(linha + i, coluna, confirmed)
 
             if confirmed:
                 for i in range(tipo):
                     defense[linha + i][coluna] = tipo
                 c += 1
-
-                print_mapas(defense)
-                print(confirmed)
-                print('------------')
 
 
 # print o tabulheiro
@@ -147,4 +129,3 @@ if __name__ == '__main__':
     init()
     print_mapas(defense)
 '''
-

@@ -18,8 +18,8 @@ for l in range(tamanho):
     sequencia.append(l)
 
 mapa = []
-mapa_jogador = []
-mapa_maquina = []
+mapa_jogador = [[0 for i in range(tamanho)] for j in range(tamanho)]
+mapa_maquina = opponent.init()
 
 
 def regras():
@@ -113,25 +113,12 @@ def intera(init=0, final=2, se=0):
 
 # feito por junior
 
-def imprime_mapa(var, mapa):
-    jogador = "Computador"
-    if var == "j":
-        jogador = "Player"
-
-    print("\n O " + jogador + " tem essa visao: \n")
-
-    # cria o mapa e exibe
-    for i in range(len(letra)):
-        print(letra[i], end="  ")
-        for j in range(10):
-            print("O", end=" ")
-        print()
-    print("   ", end="")
-
-    for j in sequencia:
-        print(str(j), end=" ")
+def imprime_mapa(mapa):
+    for i in range(tamanho):
+        print(mapa[i])
 
     return mapa
+
 
 # novo print
 def print_mapas(mapa1):
@@ -168,34 +155,39 @@ def print_mapas(mapa1):
         print(line)
 
 
-def posiciona_navio(mapa, navio, var, sentido, x, y):
+def posiciona_navio(mapa, navio, sentido, x, y):
     if sentido == "h":
         for i in range(navio):
-            mapa[x][y + i] = var
+            mapa[x][y + i] = navio
     elif sentido == "v":
         for i in range(navio):
-            mapa[x + i][y] = var
+            mapa[x + i][y] = navio
     return mapa
 
 
 def player_posiciona_navio(mapa, embarcacoes):
-    for navio in embarcacoes.keys():
-        validador = False
-        while not validador:
-            print_mapas(mapa)
-            print("\nPosicionando o : " + navio)
-            x, y = recebe_coordenada()
-            sentido = h_ou_v()
-            validador = verifica(mapa, embarcacoes[navio], x, y, sentido)
+    for navio in range(2, 6):
 
-            if not validador:
-                print("Nao pode colocar o navio neste local.\nTente coloca-lo em outro lugar do mapa.")
-                input("Aperte enter para prosseguir")
+        for n in range(1):  # 6 - navio
+            validador = False
+            while not validador:
+                system('cls')
+                imprime_mapa(mapa)
+                print("\nPosicionando o : " + embarcacoes[navio - 2])
 
-        mapa = posiciona_navio(mapa, embarcacoes[navio], navio[0], sentido, x, y)
-        print_mapas(mapa)
+                x, y = recebe_coordenada()
+                sentido = h_ou_v()
 
-    input("Navio posicionado com sucesso. Aperte enter para continuar")
+                validador = verifica(mapa, navio, x, y, sentido)
+
+                if not validador:
+                    print("Nao pode colocar o navio neste local.\nTente coloca-lo em outro lugar do mapa.")
+                    input("Aperte enter para prosseguir")
+
+            mapa = posiciona_navio(mapa, navio, sentido, x, y)
+
+    imprime_mapa(mapa)
+    input("Navios posicionado com sucesso. Aperte enter para continuar")
     return mapa
 
 
@@ -227,7 +219,14 @@ def h_ou_v():
 
 def recebe_coordenada():
     while True:
-        y = int(input("Escolha a coluna no intervalo de 0-9: "))
+        while True:
+            y = input("Escolha a coluna no intervalo de 0-%d: "%(tamanho-1))
+            if y.isdigit():
+                y = int(y)
+                break
+            else:
+                print('Digite apenas digitos')
+
         x = input("Escolha a linha no intervalo A-J: ").upper()
 
         if all(z != y for z in sequencia):
@@ -293,10 +292,10 @@ def player_atirando(mapa):
 
 def main():
     # tipos de navios
-    navios = {"Porta Avioes": 5,
-              "Encouraçado": 4,
-              "Submarino": 2,
-              "Cruzados": 3}
+    navios = ['Subimarinos',
+              'Cruzadores',
+              'Encouraçados',
+              'Porta-aviões']
 
     # setando um mapa
     mapa = []
@@ -310,7 +309,7 @@ def main():
     mapa_jogador = copy.deepcopy(mapa)
 
     # adicionando navios
-    mapa_jogador.append(copy.deepcopy(navios))
+    # mapa_jogador.append(copy.deepcopy(navios))
 
     # posicionando navios
     mapa_jogador = player_posiciona_navio(mapa_jogador, navios)
@@ -327,7 +326,7 @@ def main():
             print("Jogador vendeu!!")
             quit()
 
-        # exibe o mapa do maquina atual
+            # exibe o mapa do maquina atual
             print_mapas(mapa_maquina)
         input("Pressione enter para finalizar a jogada")
 
