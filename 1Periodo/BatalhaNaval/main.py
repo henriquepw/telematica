@@ -1,10 +1,9 @@
 import copy
 from msvcrt import getch
 from os import system
-from .opponent import *
+import opponent
 
 # variaveis
-
 # padrão ANSI
 clear = '\033[m'
 destaque = '\033[1;33m'
@@ -15,7 +14,7 @@ sequencia = []
 
 a = ord('A')
 for l in range(tamanho):
-    letra.append(chr(a + l ))
+    letra.append(chr(a + l))
     sequencia.append(l)
 
 mapa = []
@@ -134,16 +133,39 @@ def imprime_mapa(var, mapa):
 
     return mapa
 
-
-def print_mapas():
-    numeros = '[]'
+# novo print
+def print_mapas(mapa1):
+    print(' Ataque x Defesa')
+    line = ' '
     for x in range(tamanho):
-        numeros += ' ' + x
+        if x <= 9:
+            line += ' 0' + str(x)
+        else:
+            line += ' ' + str(x)
 
-    print(numeros)
-    for x in range(tamanho):
-        
+    print(line)
+    for i in range(tamanho):
+        line = '' + letra[i] + ' '
 
+        for j in range(tamanho):
+            if mapa1[i][j] == 1:
+                line += '\033[7;31m[X]\033[m'
+            elif mapa1[i][j] == 6:
+                line += '\033[7;32m[V]\033[m'
+            else:
+                line += '\033[7;30m[ ]\033[m'
+
+        '''
+        line += ' | '
+
+        for j in range(tamanho):
+            if mapa2[i][j] == 1:
+                line += '\033[7;31m[X]\033[m'
+            elif mapa2[i][j] == 6:
+                line += '\033[7;32m[V]\033[m'
+            else:
+                line += '\033[7;30m[ ]\033[m' '''
+        print(line)
 
 
 def posiciona_navio(mapa, navio, var, sentido, x, y):
@@ -160,7 +182,7 @@ def player_posiciona_navio(mapa, embarcacoes):
     for navio in embarcacoes.keys():
         validador = False
         while not validador:
-            imprime_mapa("j", mapa)
+            print_mapas(mapa)
             print("\nPosicionando o : " + navio)
             x, y = recebe_coordenada()
             sentido = h_ou_v()
@@ -171,7 +193,7 @@ def player_posiciona_navio(mapa, embarcacoes):
                 input("Aperte enter para prosseguir")
 
         mapa = posiciona_navio(mapa, embarcacoes[navio], navio[0], sentido, x, y)
-        imprime_mapa("j", mapa)
+        print_mapas(mapa)
 
     input("Navio posicionado com sucesso. Aperte enter para continuar")
     return mapa
@@ -185,11 +207,11 @@ def verifica(mapa, navio, x, y, sentido):
     else:
         if sentido == "h":
             for i in range(navio):
-                if mapa[x][y + i] != -1:
+                if mapa[x][y + i] != 0:
                     return False
         elif sentido == "v":
             for i in range(navio):
-                if mapa[x + i][y] != -1:
+                if mapa[x + i][y] != 0:
                     return False
     return True
 
@@ -223,7 +245,7 @@ def recebe_coordenada():
 def vencedor(mapa):
     for i in range(10):
         for j in range(10):
-            if mapa[i][j] != -1 and mapa[i][j] != "*" and mapa[i][j] != "#":
+            if mapa[i][j] != 0 and mapa[i][j] != "*" and mapa[i][j] != "#":
                 return False
     return True
 
@@ -244,7 +266,7 @@ def que_tiro_foi_esse(mapa, x, y):
 
 
 def movimento(mapa, x, y):
-    if mapa[x][y] == -1:
+    if mapa[x][y] == 0:
         return "Errou!"
     elif mapa[x][y] == '*' or mapa[x][y] == "#":
         return "Tente Novamente"
@@ -276,12 +298,12 @@ def main():
               "Submarino": 2,
               "Cruzados": 3}
 
-    # setando um mapa 10x10 branco
+    # setando um mapa
     mapa = []
-    for i in range(10):
+    for i in range(tamanho):
         linha = []
-        for j in range(10):
-            linha.append(-1)
+        for j in range(tamanho):
+            linha.append(0)
         mapa.append(linha)
 
     # setando player/maquina
@@ -294,10 +316,10 @@ def main():
     mapa_jogador = player_posiciona_navio(mapa_jogador, navios)
 
     # loop principal do jogo
-    while (1):
+    while 1:
 
         # movimento do jogador
-        imprime_mapa("c", mapa_maquina)
+        print_mapas(mapa_maquina)
         mapa_maquina = player_atirando(mapa_maquina)
 
         # verifica se player ganhou
@@ -306,7 +328,7 @@ def main():
             quit()
 
         # exibe o mapa do maquina atual
-        imprime_mapa("c", mapa_maquina)
+            print_mapas(mapa_maquina)
         input("Pressione enter para finalizar a jogada")
 
         '''
@@ -321,7 +343,7 @@ def main():
             quit()
 
         # exibe o mapa do jogador atual
-        imprime_mapa("j", mapa_jogador)
+        print_mapas(mapa_jogador)
         input("Para finalizar o turno da maquina pressione ENTER")
 
 

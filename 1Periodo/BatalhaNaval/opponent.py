@@ -22,12 +22,16 @@ def crange(c1, c2):
 
 # inicia os tabulheiros
 def init():
+    mapa_maquina = []
     for c in range(tamanho):
-        attack.append([0 for k in range(tamanho)])
-        defense.append([0 for k in range(tamanho)])
+        mapa_maquina.append([0 for k in range(tamanho)])
 
     for i in range(2, 6):
         preencher(i, 6 - i)
+
+    return mapa_maquina
+
+
 
 
 # verifica os arredores das posições dos navios
@@ -89,7 +93,7 @@ def preencher(tipo, quantidade):
                     defense[linha][coluna + i] = tipo
                 c += 1
 
-                bloco(defense)
+                print_mapas(defense)
                 print(confirmed)
                 print('------------')
 
@@ -109,17 +113,38 @@ def preencher(tipo, quantidade):
                     defense[linha + i][coluna] = tipo
                 c += 1
 
-                bloco(defense)
+                print_mapas(defense)
                 print(confirmed)
                 print('------------')
 
 
 # print o tabulheiro
-def bloco(bloc):
-    for c in range(tamanho):
-        print(c, ' ', bloc[c])
+def print_mapas(mapa1):
+    line = '  '
+    for x in range(tamanho):
+        if x <= 9:
+            line += ' 0' + str(x)
+        else:
+            line += ' ' + str(x)
 
+    print(line)
+    for i in range(tamanho):
+        if i <= 9:
+            line = '0' + str(i) + ' '
+        else:
+            line = '' + str(i) + ' '
+        for j in range(tamanho):
+            if mapa1[i][j] == 1:
+                line += '\033[7;31m[X]\033[m'
+            elif mapa1[i][j] == 6:
+                line += '\033[7;32m[V]\033[m'
+            else:
+                line += '\033[7;30m[ ]\033[m'
+        print(line)
 
+'''
 if __name__ == '__main__':
     init()
-    bloco(defense)
+    print_mapas(defense)
+'''
+
