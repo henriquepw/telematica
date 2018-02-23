@@ -230,15 +230,21 @@ def recebe_coordenada():
         while True:
             y = input("Escolha a coluna no intervalo de 0-%d: " % (tamanho - 1))
             if y.isdigit():
-                y = int(y)
-                break
+                if (tamanho < int(y)) or (int(y) >= 0):
+                    y = int(y)
+                    break
+                else:
+                    print('Digite entre o intervalo')
             else:
                 print('Digite apenas digitos')
 
         while True:
             x = input("Escolha a linha no intervalo A-{}: ".format(chr(ord('A') + tamanho - 1))).upper()
             if x.isalpha():
-                break
+                if ((ord('A') + tamanho) < ord(x)) or (ord(x) >= ord('A')):
+                    break
+                else:
+                    print('Digite entre o intervalo')
             else:
                 print('Digite apenas letras')
 
@@ -260,21 +266,6 @@ def vencedor(mapa):
             if mapa[i][j] != 0 and mapa[i][j] != 1 and mapa[i][j] != 6:
                 return False
     return True
-
-
-def que_tiro_foi_esse(mapa, x, y):
-    if mapa[x][y] == "A":
-        navio = "Porta Avioes"
-    elif mapa[x][y] == "B":
-        navio = "Encouraçado"
-    elif mapa[x][y] == "S":
-        navio = "Submarino"
-    elif mapa[x][y] == "D":
-        navio = "Cruzados"
-
-    mapa[-1][navio] -= 1
-    if mapa[-1][navio] == 0:
-        print(navio + " atingido")
 
 
 def movimento(mapa, x, y):
@@ -318,19 +309,6 @@ def main():
               'Encouraçados',
               'Porta-aviões']
 
-    '''
-    # setando um mapa
-    mapa = []
-    for i in range(tamanho):
-        linha = []
-        for j in range(tamanho):
-            linha.append(0)
-        mapa.append(linha) 
-
-    # setando player/maquina
-    mapa_jogador = copy.deepcopy(mapa)
-    '''
-
     # posicionando navios
     mapa_jogador = player_posiciona_navio(mapa_jogador, navios)
 
@@ -353,12 +331,8 @@ def main():
 
         input("Pressione enter para finalizar a jogada")
 
-        '''
-        computer move
-        felipe tem que colocar aqui a jogada da maquina
-        mapa_jogador = maquina_atirando(mapa_jogador)
-        
-        '''
+        # vez da maquina
+        mapa_jogador = opponent.enemy(mapa_jogador)
 
         # verifica a jogada da maquina
         if mapa_jogador == "VITORIA":
@@ -375,19 +349,4 @@ def main():
 
 if __name__ == '__main__':
     system('cls')
-    imprime_mapa(mapa_maquina)
-
-    # loop principal do jogo
-    while 1:
-
-        # movimento do jogador
-        system('cls')
-        print_mapas()
-        mapa_maquina = player_atirando(mapa_maquina)
-
-        # verifica se player ganhou
-        if mapa_maquina == "VITORIA":
-            print(destaque, "Você VENCEU!!!", clear)
-            print(destaque, 'Pressione qualquer tecla para voltar ao menu ...', clear)
-            getch()
-            quit()
+    main()
