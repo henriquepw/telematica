@@ -349,4 +349,4 @@ def main():
 
 if __name__ == '__main__':
     system('cls')
-    main()
+    intera()
