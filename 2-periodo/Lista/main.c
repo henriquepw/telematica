@@ -22,6 +22,8 @@ node *alloc();
 int isEmpty(List *list);
 
 void push(List *list);
+void pushFirst(List *list);
+void pushIn(List *list, char name[]);
 
 void showAll(List *list);
 void showFirst(List *list);
@@ -39,7 +41,6 @@ void clean();
 
 int main(void){
 	List *alunos = createList();
-
 	menu(alunos);
 	
 	return 0;
@@ -68,6 +69,38 @@ void push(List *list){
 		list->size++;
 	}
 
+}
+
+void pushFirst(List *list){
+	node *new = alloc();
+
+	new->prox = list->init;
+	list->init = new;
+	list->size++;
+}
+
+void pushIn(List *list, char name[]){
+	node *aux = list->init;
+	node *ant = list->init;
+
+	while((strcmp(aux->nome, name) != 0) && (aux->prox != NULL)){
+		ant = aux;
+		aux = aux->prox;
+	}
+
+	if(strcmp(aux->nome, name) == 0){
+		if(strcmp(aux->nome, list->init->nome) == 0){
+			pushFirst(list);
+		} else {
+			node *new = alloc();
+			ant->prox = new;
+			new->prox = aux;
+			list->size++;
+		}
+
+	} else {
+		printf("%s nao foi encontrado.", name);
+	}
 }
 
 void showAll(List *list){
@@ -228,6 +261,9 @@ void menu(List *list){
 		printf("08. Remover o primeiro \n");
 		printf("09. Remover o ultimo \n");
 		printf("10. Remover aluno por nome \n");
+
+		printf("11. Inserir no inicio \n");
+		printf("12. Inserir na frente de {Nome do aluno} \n");
 		
 		printf("00. Sair \n");
 		scanf("%d", &se);
@@ -280,6 +316,16 @@ void menu(List *list){
 				printf("Digite o nome do aluno: ");
 				scanf(" %[^\n]s", name);
 				popByName(list, name);
+				clean();
+				break;
+			case 11:
+				pushFirst(list);
+				clean();
+				break;
+			case 12:
+				printf("Digite o nome do aluno: ");
+				scanf(" %[^\n]s", name);
+				pushIn(list, name);
 				clean();
 				break;
 			case 0:
