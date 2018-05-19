@@ -25,6 +25,19 @@ void clean();
 
 int main(void){
 	List *alunos = createList();
+	
+	pushIn(alunos, 2);
+	pushIn(alunos, 3);
+	pushIn(alunos, 4);
+	pushIn(alunos, 6);
+	pushIn(alunos, 7);
+	pushIn(alunos, 5);
+	pushIn(alunos, 8);
+	pushIn(alunos, 12);
+	pushIn(alunos, 10);
+	pushIn(alunos, 0);
+	pushIn(alunos, 1);
+	
 	menu(alunos);
 	
 	return 0;
