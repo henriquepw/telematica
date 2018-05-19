@@ -8,19 +8,18 @@ typedef struct elem{
 
 typedef struct list{
 	int size;
-	node *init;
-	node *last;
+	node *init, *last;
 } List;
 
 List *createList();
-node *alloc(int num);
-int isEmpty(List *list);
+node *alloc(int);
+int isEmpty(List *);
 
-void push(List *list, int num);
-void pushFirst(List *list, int num);
-void pushIn(List *list, int num);
+void push(List *, int);
+void pushFirst(List *, int);
+void pushIn(List *, int);
 
-void menu(List *list);
+void menu(List *);
 void clean();
 
 
@@ -33,7 +32,6 @@ int main(void){
 
 List *createList(){
 	List *list = (List *)malloc(sizeof(List));
-
 	list->size = 0;
 	list->init = NULL;
 	list->last = NULL;
@@ -56,7 +54,7 @@ node *alloc(int num){
 }
 
 int isEmpty(List *list){
-  return list->size == 0;
+  return (list->init == NULL) && (list->last == NULL);
 }
 
 void push(List *list, int num){
@@ -66,8 +64,8 @@ void push(List *list, int num){
 		list->init = novo;
 		list->last = novo;
 	} else {
-		list->last->prox = novo;
 		novo->ant = list->last;
+		list->last->prox = novo;
 		list->last = novo;
 	}
 	
@@ -81,21 +79,21 @@ void pushFirst(List *list, int num){
 	if(isEmpty(list)){
 		list->init = novo;
 		list->last = novo;
-		list->size++;
 	} else {
 		novo->prox = list->init;
 		list->init->ant = novo;
 		list->init = novo;
-		list->size++;
 	}
+	
+	list->size++;
 }
 
 void pushIn(List *list, int num){
-  
   if (isEmpty(list)){
   	node *novo = alloc(num);
     list->init = novo;
     list->last = novo;
+    list->size++;
     
   } else if(num < list->init->num){
     pushFirst(list, num);
@@ -114,31 +112,27 @@ void pushIn(List *list, int num){
 	}
 	
 	node *aux;
-	if(num > auxL->num)
-		aux = auxL;
-	else
-		aux = auxI;
+	if(num >= auxL->num) aux = auxL;
+	else aux = auxI->ant;
 		
 	node *novo = alloc(num);
 	novo->prox = aux->prox;
 	novo->ant = aux;
-	aux->prox = novo;
-	  
+	aux->prox = novo; 
+	aux->prox->ant = novo;
+	list->size++;
   }
+  
 }
 
 void showFirst(List *list){
-	if(!isEmpty(list))
-		printf("Primeiro numero: %d \n", list->init->num);
-	else
-		printf("Lista vazia. \n");
+	if(!isEmpty(list)) printf("Primeiro numero: %d \n", list->init->num);
+	else printf("Lista vazia. \n");
 }
 
 void showLast(List *list){
-	if(!isEmpty(list))
-		printf("Ultimo Numero: %d \n", list->last->num);
-	else
-		printf("Lista vazia. \n");
+	if(!isEmpty(list)) printf("Ultimo Numero: %d \n", list->last->num);
+	else printf("Lista vazia. \n");
 }
 
 // begin 1- vai do init até last; 0- vai de last ate init
@@ -156,7 +150,6 @@ void showAll(List *list, int begin){
 			aux = aux->ant;
 		}
 	}
-	
 	
 }
 
@@ -178,7 +171,7 @@ void menu(List *list){
 		printf("10. Remover aluno por nome \n");
 
 		printf("11. Inserir no inicio \n");
-		printf("12. Inserir na frente de {Nome do aluno} \n");
+		printf("12. Inserir ordenado \n");
 		
 		printf("00. Sair \n");
 		scanf("%d", &se);
@@ -216,12 +209,12 @@ void menu(List *list){
 				scanf(" %[^\n]s", name);
 				showByName(list, name);
 				clean();
-				break;
+				break;*/
 			case 7:
 				printf("Tamanho: %d \n", list->size);
 				clean();
 				break;
-			case 8:
+			/*case 8:
 				popFirst(list);
 				clean();
 				break;
@@ -247,7 +240,14 @@ void menu(List *list){
 				pushIn(list, num);
 				clean();
 				break;
+			case 13:
+				list = createList();
+				clean();
+				break;
 			case 0:
+				return;
+				break;
+			default:
 				puts("\x1b[H\x1b[2J");
 				printf("Comando invalido. Digite novamente \n");
 				break;
