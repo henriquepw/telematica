@@ -19,23 +19,23 @@ typedef struct list{
 
 List *createList();
 node *alloc();
-int isEmpty(List *list);
+int isEmpty(List *);
 
-void push(List *list);
-void pushFirst(List *list);
-void pushIn(List *list, char name[]);
+void push(List *);
+void pushFirst(List *);
+void pushIn(List *, char *);
 
-void showAll(List *list);
-void showFirst(List *list);
-void showLast(List *list);
-void showByName(List *list, char name[]);
-void printAluno(node *aluno);
+void showAll(List *);
+void showFirst(List *);
+void showLast(List *);
+void showByName(List *, char *);
+void printAluno(node *);
 
-void popFirst(List *list);
-void popLast(List *list);
-void popByName(List *list, char name[]);
+void popFirst(List *);
+void popLast(List *);
+void popByName(List *, char *);
 
-void menu(List *list);
+void menu(List *);
 void clean();
 
 
@@ -138,11 +138,8 @@ void showByName(List *list, char name[]){
 		while ((strcmp(aux->nome, name) != 0) && (aux->prox != list->last))
 			aux = aux->prox;
 			
-		if(strcmp(list->last->nome, name) == 0){
-			printAluno(aux);
-		}else {
-			printf("Aluno nao encontrado. \n");
-		}
+		if(strcmp(list->last->nome, name) == 0) printAluno(aux);
+		else printf("Aluno nao encontrado. \n");
 		
 	}
 }
@@ -169,9 +166,9 @@ void popLast(List *list){
 	} else {
 		node *aux = list->init;
 		
-		while (aux->prox != list->last){
+		while (aux->prox != list->last)
 			aux = aux->prox;
-		}
+
 		
 		list->last = aux;
 		free(aux->prox);
@@ -183,7 +180,7 @@ void popLast(List *list){
 void popByName(List *list, char name[]){
 	if(isEmpty(list)){
 		printf("Lista vazia \n");
-		
+			
 	} else if(list->size == 1){
 		free(list->init);
 		list->init = NULL;
@@ -219,7 +216,7 @@ node *alloc(){
 	node *novo = (node *)malloc(sizeof(node));
 
 	if(novo == NULL){
-		printf("N�o foi possivel alocar memoria");
+		printf("Nao foi possivel alocar memoria. \n");
 	} else{
 		printf("Digite os dados do novo aluno \n");
 
@@ -275,11 +272,9 @@ void menu(List *list){
 				clean();
 				break;
 			case 2:
-				if(isEmpty(list))
-					printf("Lista esta vazia! \n");
-				else 
-					printf("Lista nao esta vazia! \n");
-				
+				if(isEmpty(list)) printf("Lista esta vazia! \n");
+				else printf("Lista nao esta vazia! \n");
+	
 				clean();
 				break;
 			case 3:
