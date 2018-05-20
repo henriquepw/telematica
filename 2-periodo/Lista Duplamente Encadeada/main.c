@@ -25,19 +25,6 @@ void clean();
 
 int main(void){
 	List *alunos = createList();
-	
-	pushIn(alunos, 2);
-	pushIn(alunos, 3);
-	pushIn(alunos, 4);
-	pushIn(alunos, 6);
-	pushIn(alunos, 7);
-	pushIn(alunos, 5);
-	pushIn(alunos, 8);
-	pushIn(alunos, 12);
-	pushIn(alunos, 10);
-	pushIn(alunos, 0);
-	pushIn(alunos, 1);
-	
 	menu(alunos);
 	
 	return 0;
@@ -115,11 +102,10 @@ void pushIn(List *list, int num){
     push(list, num);
     
   } else {
-    node *auxI = list->init;
-	node *auxL = list->last;
+    node *auxI = list->init->prox;
+	node *auxL = list->last->ant;
 	
-    while( (num > auxI->num) && (num < auxL->num) &&
-    (auxI->prox != NULL) && (auxL->ant != NULL)){
+    while( (num >= auxI->num) && (num <= auxL->num) ){
 		  auxI = auxI->prox;
 		  auxL = auxL->ant;
 	}
@@ -131,8 +117,8 @@ void pushIn(List *list, int num){
 	node *novo = alloc(num);
 	novo->prox = aux->prox;
 	novo->ant = aux;
-	aux->prox = novo; 
 	aux->prox->ant = novo;
+	aux->prox = novo; 
 	list->size++;
   }
   
@@ -153,13 +139,13 @@ void showAll(List *list, int begin){
 	if (begin){
 		node *aux = list->init;
 		while(aux != NULL){
-			printf("Primeiro numero: %d \n", aux->num);
+			printf("Numero: %d \n", aux->num);
 			aux = aux->prox;
 		}
 	} else {
 		node *aux = list->last;
 		while(aux != NULL){
-			printf("Primeiro numero: %d \n", aux->num);
+			printf("umero: %d \n", aux->num);
 			aux = aux->ant;
 		}
 	}
@@ -261,7 +247,7 @@ void menu(List *list){
 				return;
 				break;
 			default:
-				puts("\x1b[H\x1b[2J");
+				system("cls");
 				printf("Comando invalido. Digite novamente \n");
 				break;
 		}
