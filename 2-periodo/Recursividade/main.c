@@ -19,19 +19,37 @@ void q5();
 int strSize(char *, int);
 
 void q6();
-void q7();
+int soma(int *, int);
+
 void q8();
+float somatorioQ8(int);
+
 void q9();
+float somatorioQ9(int);
+
 void q10();
+float potencia(float, int);
+
 void main(){
 	/*
-	q1();
-	q2();
-	q3();
-	q4();
+	int se = -1;
+	while(se != 0){
+		scanf("%d", &se);
+		switch(se){
+			case 01: q1(); break;
+			case 02: q2(); break;
+			case 03: q3(); break;
+			case 04: q4(); break;
+			case 05: q5(); break;
+			case 06: q6(); break;
+			case 07: q7(); break;
+			case 08: q8(); break;
+			case 09: q9(); break;
+			case 10: q10(); break;
+		}
+	}
 	*/
-	
-	q5();
+	q10();
 }
 
 void q1(){
@@ -39,7 +57,6 @@ void q1(){
 	
 	printf("Index: %d \n", lerZero(vetor));
 	printf("Index: %d \n", ler0(vetor, 0));
-	system("pause");
 }
 
 int lerZero(int vetor[]){
@@ -61,7 +78,6 @@ void q2(){
 	
 	scanf("%d", &comparar);
 	printf("Index: %d \n", contido(vetor, comparar, 0));
-	system("pause");
 }
 
 int contido(int vetor[], int comparar, int index){
@@ -112,3 +128,54 @@ int strSize(char frase[], int index){
 	if ((frase[index] == '\n') || (frase[index] == '\0')) return index;
 	else strSize(frase, index+1);	
 }
+
+void q6(){
+	int vetor[] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+	
+	printf("%d", soma(vetor, (sizeof(vetor)/sizeof(vetor[0])-1)));
+}
+
+int soma(int vetor[], int index){
+	if (index == 0) return vetor[0];
+	else return vetor[index] + soma(vetor, index-1);
+}
+
+void q8(){
+	int n = 0;
+	scanf("%d", &n);
+	printf("%2.f", somatorioQ8(n));
+	
+}
+
+float somatorioQ8(int n){
+	float S = n/(2.0 + (4.0 * (n-1)));
+	if (n <= 1) return S;
+	else return S + somatorioQ8(n-1);
+}
+
+void q9(){
+	int n = 0;
+	scanf("%d", &n);
+	printf("%2.f", somatorioQ9(n));	
+}
+
+float somatorioQ9(int n){
+	float S = n/(n+2.0);
+	if (n <= 1) return S + 1;
+	else return S + 1 + somatorioQ9(n-1);
+}
+
+void q10(){
+	float n;
+	int m;
+	
+	scanf("%f", &n);
+	scanf("%d", &m);
+	printf("%2.f", potencia(n, m));	
+}
+
+float potencia(float n, int m){
+	if (m == 1) return 2;
+	else return n * potencia(n, m-1);
+}
+
