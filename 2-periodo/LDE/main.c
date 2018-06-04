@@ -32,12 +32,12 @@ void clean();
 
 int main(void){
 	List *alunos = createList();
-	
+
 	for(int i=0; i < 10; i++)
 		pushIn(alunos, i);
 
 	menu(alunos);
-	
+
 	return 0;
 }
 
@@ -79,7 +79,7 @@ void push(List *list, int num){
 		list->last->prox = novo;
 		list->last = novo;
 	}
-	
+
 	list->size++;
 
 }
@@ -95,7 +95,7 @@ void pushFirst(List *list, int num){
 		list->init->ant = novo;
 		list->init = novo;
 	}
-	
+
 	list->size++;
 }
 
@@ -105,34 +105,34 @@ void pushIn(List *list, int num){
     list->init = novo;
     list->last = novo;
     list->size++;
-    
+
   } else if(num < list->init->num){
     pushFirst(list, num);
-    
+
   } else if (num > list->last->num){
     push(list, num);
-    
+
   } else {
     node *auxI = list->init->prox;
 	node *auxL = list->last->ant;
-	
+
     while( (num >= auxI->num) && (num <= auxL->num) ){
 		  auxI = auxI->prox;
 		  auxL = auxL->ant;
 	}
-	
+
 	node *aux;
 	if(num >= auxL->num) aux = auxL;
 	else aux = auxI->ant;
-		
+
 	node *novo = alloc(num);
 	novo->prox = aux->prox;
 	novo->ant = aux;
 	aux->prox->ant = novo;
-	aux->prox = novo; 
+	aux->prox = novo;
 	list->size++;
   }
-  
+
 }
 
 void pop(List *list){
@@ -165,7 +165,7 @@ void popFirst(List *list){
 		list->init = list->init->prox;
 		list->init->ant = NULL;
 		list->size--;
-		free(aux);	
+		free(aux);
 	}
 }
 
@@ -179,13 +179,13 @@ void popIn(List *list, int num){
 	} else {
 		node *auxI = list->init->prox;
 		node *auxF = list->last->ant;
-		
-		while ( (num != auxI->num) && (num != auxF->num) 
+
+		while ( (num != auxI->num) && (num != auxF->num)
 		&& (auxI->prox != NULL)){
 			auxI = auxI->prox;
 			auxF = auxF->ant;
 		}
-		
+
 		node *aux;
 		if (num == auxF->num) {
 			aux = auxF;
@@ -193,15 +193,15 @@ void popIn(List *list, int num){
 			aux = auxI;
 		} else {
 			printf("Item nao encontrado... \n");
-			return;	
+			return;
 		}
-		
+
 		aux->ant->prox =  aux->prox;
 		aux->prox->ant =  aux->ant;
 		list->size--;
 		free(aux);
 	}
-		
+
 }
 
 void popIndex(List *list, int pos){
@@ -211,7 +211,7 @@ void popIndex(List *list, int pos){
 		aux = aux->prox;
 		i++;
 	}
-	
+
 	if(aux == NULL){
 		printf("posicao invalida \n");
 	} else if(aux == list->last){
@@ -233,7 +233,7 @@ void popAll(List *list){
 		list->init = list->init->prox;
 		free(aux);
 	}
-	
+
 	list->last = NULL;
 	list->size = 0;
 }
@@ -248,8 +248,8 @@ void showLast(List *list){
 	else printf("Lista vazia. \n");
 }
 
-// begin 1- vai do init até last; 0- vai de last ate init
-void showAll(List *list, int begin){ 
+// begin 1- vai do init atï¿½ last; 0- vai de last ate init
+void showAll(List *list, int begin){
 	if (begin){
 		node *aux = list->init;
 		while(aux != NULL){
@@ -263,7 +263,7 @@ void showAll(List *list, int begin){
 			aux = aux->ant;
 		}
 	}
-	
+
 }
 
 void menu(List *list){
@@ -271,7 +271,7 @@ void menu(List *list){
 	while (se != 0){
 		options();
 		scanf("%d", &se);
-		
+
 		int num;
 		switch(se){
 			case 1:
@@ -352,21 +352,21 @@ void menu(List *list){
 				printf("Comando invalido. Digite novamente \n");
 				break;
 		}
-		
-	}	
+
+	}
 }
 
 void options(){
 	printf("01. Inserir \n");
 	printf("02. verificar se esta vazia \n");
-		
+
 	printf("03. Exibir lista I/F\n");
 	printf("04. Exibir lista F/I \n");
 	printf("05. Exibir o primeiro e o ultimo \n");
 	printf("06. Pesquisar aluno por nome \n");
-		
+
 	printf("07. Tamanho \n");
-		
+
 	printf("08. Remover o primeiro \n");
 	printf("09. Remover o ultimo \n");
 	printf("10. Remover numero \n");
@@ -375,7 +375,7 @@ void options(){
 
 	printf("13. Inserir no inicio \n");
 	printf("14. Inserir ordenado \n");
-		
+
 	printf("00. Sair \n");
 }
 

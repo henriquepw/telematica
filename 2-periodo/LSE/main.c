@@ -38,6 +38,9 @@ void popByName(List *, char *);
 void menu(List *);
 void clean();
 
+/* Metodos recursivos */
+void showAllRecursive(List *, node *, int);
+void popAllRecursive(List *, node *);
 
 int main(void){
 	List *alunos = createList();
@@ -235,32 +238,59 @@ node *alloc(){
 void printAluno(node *aluno){
 	printf(" --Nome: %s \n", aluno->nome);
 	printf(" --Matricula: %s \n", aluno->matricula);
-	printf(" --Media anual: %.1f\n", aluno->media_anual);
+	printf(" --Media anual: %.1f\n\n", aluno->media_anual);
 }
 
 int isEmpty(List *list){
   return list->size == 0;
 }
 
+/*Metodos recursivos*/
+void showAllRecursive(List *list, node *aux, int cont){
+	if(isEmpty(list)) printf("Lista vazia. \n ");
+	else {
+		printf("Dados do aluno %d \n", cont);
+		if(aux->prox == NULL) printAluno(aux);
+		else {
+			printAluno(aux);
+			showAllRecursive(list, aux->prox, cont + 1);
+		}	
+	}
+}
+
+void popAllRecursive(List *list, node *aux){
+	if(isEmpty(list)) printf("A lista nao contem itens para serem removidos. \n ");
+	else if(aux->prox == NULL) free(aux);
+	else {
+		popAllRecursive(list, aux->prox);
+		free(aux);
+		list->init = NULL;
+		list->last = NULL;
+		list->size = 0;
+	}
+}
+
 void menu(List *list){
 	int se = -1;
 	while (se != 0){
-		printf("01. Inserir \n");
-		printf("02. verificar se esta vazia \n");
+		printf("001. Inserir \n");
+		printf("002. verificar se esta vazia \n");
 		
-		printf("03. Exibir lista \n");
-		printf("04. Exibir o primeiro \n");
-		printf("05. Exibir o ultimo \n");
-		printf("06. Pesquisar aluno por nome \n");
+		printf("003. Exibir lista \n");
+		printf("033. Exibir lista Recursivamente \n");
+		printf("004. Exibir o primeiro \n");
+		printf("005. Exibir o ultimo \n");
+		printf("006. Pesquisar aluno por nome \n");
 		
-		printf("07. Tamanho \n");
+		printf("007. Tamanho \n");
 		
-		printf("08. Remover o primeiro \n");
-		printf("09. Remover o ultimo \n");
-		printf("10. Remover aluno por nome \n");
+		printf("008. Remover o primeiro \n");
+		printf("009. Remover o ultimo \n");
+		printf("010. Remover aluno por nome \n");
+		printf("111. Remover Todos recursivamente \n");
 
-		printf("11. Inserir no inicio \n");
-		printf("12. Inserir na frente de {Nome do aluno} \n");
+		printf("011. Inserir no inicio \n");
+		printf("012. Inserir na frente de {Nome do aluno} \n");
 		
 		printf("00. Sair \n");
 		scanf("%d", &se);
@@ -279,6 +309,10 @@ void menu(List *list){
 				break;
 			case 3:
 				showAll(list);
+				clean();
+				break;
+			case 33:
+				showAllRecursive(list, list->init, 1);
 				clean();
 				break;
 			case 4:
@@ -315,6 +349,10 @@ void menu(List *list){
 				break;
 			case 11:
 				pushFirst(list);
+				clean();
+				break;
+			case 111:
+				popAllRecursive(list, list->init);
 				clean();
 				break;
 			case 12:
