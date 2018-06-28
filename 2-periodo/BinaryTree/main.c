@@ -80,8 +80,7 @@ void insert(Node **root, int value){
 }
 
 Node *max(Node *tree){
-	if(!isEmpty(tree->right)) max(tree->right);
-	else return tree;
+	return !isEmpty(tree->right)? max(tree->right) : tree;
 }
 
 Node *sum(Node *tree){
@@ -90,8 +89,7 @@ Node *sum(Node *tree){
 
 void remov(Node **root, int value){
 	if(isEmpty(*root)) printf("Arvore vazia \n");	
-	else
-		switch(getChild(*root)){
+	else switch(getChild(*root)){
 			case 1:
 				 
 				break;
@@ -129,10 +127,9 @@ void menu(Node *root){
 				break;
 			case 2: postOrder(root); break;
 			case 3:
-				if(isEmpty(root)) printf("Arvore esta vazia! \n");
-				else printf("Arvore nao esta vazia! \n");
+				(isEmpty(root))? printf("Arvore esta vazia! \n") : printf("Arvore nao esta vazia! \n");
 				break;
-			case 4: printf("Maior: %d \n", max(root)->value) break;
+			case 4: printf("Maior: %d \n", max(root)->value); break;
 			case 5: break;
 			case 6: break;
 			case 7: break;
@@ -169,3 +166,4 @@ void clean(){
 	puts("\x1b[H\x1b[2J");
 	system("cls");
 }
+
