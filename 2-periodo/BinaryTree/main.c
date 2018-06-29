@@ -9,7 +9,10 @@ typedef struct elem {
 int isEmpty(Node *root);
 Node *createTree();
 Node *getNode(Node *tree, int value);
+Node *getMax(Node *tree);
+int getSum(Node *tree);
 int getChild(Node *node);
+int height(Node *tree)
 
 void preOrder(Node *tree);
 void postOrder(Node *tree);
@@ -18,9 +21,6 @@ void inOrder(Node *tree);
 void insert(Node **root, int value);
 void remov(Node **root, int value);
 void swap(Node **root, int value1, int value2);
-
-Node *max(Node *tree);
-Node *sum(Node *tree);
 
 void menu(Node *root);
 int options();
@@ -79,12 +79,36 @@ void insert(Node **root, int value){
 		insert(&((*root)->right), value); 
 }
 
-Node *max(Node *tree){
-	return !isEmpty(tree->right)? max(tree->right) : tree;
+Node *getMax(Node *tree){
+	return !isEmpty(tree->right)? getMax(tree->right) : tree;
 }
 
-Node *sum(Node *tree){
-	
+int getSum(Node *tree){
+	return !isEmpty(tree)? tree->value + getSum(tree->left) + getSum(tree->right) : 0;
+}
+
+void postImpar(Node *tree){
+	if(!isEmpty(tree)){
+		postImpar(tree->left);
+		postImpar(tree->right);
+		if(tree->value % 2 != 0) printf("%d \n", tree->value);
+	}
+}
+
+void preOrder10(Node *tree){
+	if(!isEmpty(tree)){
+		if(tree->value % 10 == 0) printf("%d \n", tree->value);
+		preOrder10(tree->left);
+		preOrder10(tree->right);
+	}
+}
+
+int height(Node *tree){
+	if(!isEmpty(tree)){
+		int left = height(tree->left);
+		int right = height(tree->right);
+		return left >= right? left + 1 : right + 1;
+	} else return 0;
 }
 
 void remov(Node **root, int value){
@@ -111,8 +135,7 @@ Node *getNode(Node *tree, int value){
 
 int getChild(Node *node){
 	if((node->left == NULL) && (node->right == NULL)) return 0;
-	else if((node->left != NULL) || (node->right != NULL)) return 1;
-	else return 2;
+	else return ((node->left != NULL) || (node->right != NULL))? 1 : 2;
 }
 
 void menu(Node *root){
@@ -126,14 +149,14 @@ void menu(Node *root){
 				insert(&root, num);
 				break;
 			case 2: postOrder(root); break;
-			case 3:
-				(isEmpty(root))? printf("Arvore esta vazia! \n") : printf("Arvore nao esta vazia! \n");
+			case 3: 
+				isEmpty(root)? printf("vazia! \n") : printf("Nao vazia! \n"); 
 				break;
-			case 4: printf("Maior: %d \n", max(root)->value); break;
-			case 5: break;
-			case 6: break;
-			case 7: break;
-			case 8: break;
+			case 4: printf("Maior: %d \n", getMax(root)->value); break;
+			case 5: printf("Soma: %d \n", getSum(root)); break;
+			case 6: postImpar(root); break;
+			case 7: printf("Altura: %d \n", height(root)); break;
+			case 8: preOrder10(root); break;
 			case 9: break;
 			case 10: break;
 			case 0: exit(1);
