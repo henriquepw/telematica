@@ -12,7 +12,9 @@ Node *getNode(Node *tree, int value);
 Node *getMax(Node *tree);
 int getSum(Node *tree);
 int getChild(Node *node);
-int height(Node *tree)
+int height(Node *tree);
+int contPrimo(Node *tree);
+int isPrimo(int num);
 
 void preOrder(Node *tree);
 void postOrder(Node *tree);
@@ -135,7 +137,28 @@ Node *getNode(Node *tree, int value){
 
 int getChild(Node *node){
 	if((node->left == NULL) && (node->right == NULL)) return 0;
-	else return ((node->left != NULL) || (node->right != NULL))? 1 : 2;
+	else return ((node->left != NULL) ^ (node->right != NULL))? 1 : 2;
+}
+
+int contPrimo(Node *tree){
+	if(!isEmpty(tree)) {
+		int primo = (isPrimo(tree->value))? 1 : 0;
+		return primo + contPrimo(tree->left) + contPrimo(tree->right);
+	} else return 0;
+}
+
+int isPrimo(int num){
+	int primo = 0;
+	if((num == 2) || (num % 2 != 0)){
+		primo = 1;
+		for(int i = 3; i < num; i += 2){
+			if(num % i == 0) {
+				primo = 0;
+				break;
+			}
+		}	
+	}
+	return primo;
 }
 
 void menu(Node *root){
@@ -157,8 +180,9 @@ void menu(Node *root){
 			case 6: postImpar(root); break;
 			case 7: printf("Altura: %d \n", height(root)); break;
 			case 8: preOrder10(root); break;
-			case 9: break;
+			case 9: printf("Primos: %d \n", contPrimo(root)); break;
 			case 10: break;
+			case 11: break;
 			case 0: exit(1);
 			default: printf("Comando invalido. ");
 		}
