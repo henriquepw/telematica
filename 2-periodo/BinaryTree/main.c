@@ -6,26 +6,27 @@ typedef struct elem {
 	struct elem *left, *right;	
 } Node;
 
-int isEmpty(Node *root);
 Node *createTree();
 Node *getNode(Node *tree, int value);
 Node *getMax(Node *tree);
+int isEmpty(Node *root);
 int getSum(Node *tree);
 int getChild(Node *node);
 int height(Node *tree);
 int contPrimo(Node *tree);
 int isPrimo(int num);
+void setValue(Node *tree, int value, int num);
+void setFolhas(Node *tree, int num);
 
 void preOrder(Node *tree);
 void postOrder(Node *tree);
 void inOrder(Node *tree);
-
 void insert(Node **root, int value);
 void remov(Node **root, int value);
 void swap(Node **root, int value1, int value2);
 
-void menu(Node *root);
 int options();
+void menu(Node *root);
 void clean();
 
 int main (){
@@ -161,10 +162,23 @@ int isPrimo(int num){
 	return primo;
 }
 
+void setFolhas(Node *tree, int num){
+	if (!isEmpty(tree)){
+		tree->value += num;
+		setFolhas(tree->left, num);
+		setFolhas(tree->right, num);
+	}
+}
+
+void setValue(Node *tree, int value, int num){
+	Node *node = getNode(tree, value);
+	if(node != NULL) node->value = num;
+}
+
 void menu(Node *root){
 	while(1) {
 		clean();
-		int num;
+		int num, num2;
 		switch(options()){
 			case 1:
 				printf("Digite o numero: ");
@@ -181,8 +195,18 @@ void menu(Node *root){
 			case 7: printf("Altura: %d \n", height(root)); break;
 			case 8: preOrder10(root); break;
 			case 9: printf("Primos: %d \n", contPrimo(root)); break;
-			case 10: break;
-			case 11: break;
+			case 10: 
+				printf("Digite o numero ha somar com as folhas: ");
+				scanf("%d", &num);
+				setFolhas(root, num);
+				break;
+			case 11: 
+				printf("Digite X: ");
+				scanf("%d", &num);
+				printf("Digite Y: ");
+				scanf("%d", &num2);
+				setValue(root, num, num2);
+				break;
 			case 0: exit(1);
 			default: printf("Comando invalido. ");
 		}
@@ -202,6 +226,8 @@ int options(){
 	printf("Questao 09. \n");
 	printf("Questao 10. \n");
 	printf("Questao 11. \n");
+	printf("Swap    12. \n");
+	printf("remove  13. \n");
 	printf("Sair    00. \n");
 	
 	int se = -1;
