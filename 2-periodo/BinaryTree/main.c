@@ -23,7 +23,7 @@ void postOrder(Node *tree);
 void inOrder(Node *tree);
 void insert(Node **root, int value);
 void remov(Node **root, int value);
-void swap(Node **root, int value1, int value2);
+void swap(Node *node1, Node *node2);
 
 int options();
 void menu(Node *root);
@@ -175,6 +175,12 @@ void setValue(Node *tree, int value, int num){
 	if(node != NULL) node->value = num;
 }
 
+void swap(Node *node1, Node *node2){
+	int aux = node1->value;
+	node1->value = node2->value;
+	node2->value = aux->value;
+}
+
 void menu(Node *root){
 	while(1) {
 		clean();
@@ -207,6 +213,8 @@ void menu(Node *root){
 				scanf("%d", &num2);
 				setValue(root, num, num2);
 				break;
+			case 2: break;
+			case 2: break;
 			case 0: exit(1);
 			default: printf("Comando invalido. ");
 		}
