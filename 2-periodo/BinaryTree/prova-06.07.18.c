@@ -15,7 +15,6 @@ void menu(Node *root);
 int questoes();
 
 //questao 1
-void insert(Node *tree);
 void insertOne(Node **tree, int matricula, int salario);
 
 //questao 2
@@ -47,42 +46,23 @@ void preOrder(Node *node){
 	}
 }
 
-void insert(Node *tree){
-	int matricula, salario;
-	
-	printf("Matricula (se 0, para de inserir): \n");
-	scanf("%d", &matricula);
-	
-	if(matricula != 0){
-		printf("Salario : \n");
-		scanf("%d", &salario);
-		
-		insertOne(&tree, matricula, salario);
-		insert(tree);
-	}
-	
-}
-
 void insertOne(Node **tree, int matricula, int salario){
 	if(isEmpty(*tree)){
-		Node *novo = (Node *)malloc(sizeof(Node));
-		novo->matricula = matricula;
-		novo->salario = salario;
-		novo->esq = NULL;
-		novo->dir = NULL;
-		*tree = novo;
+		*tree = (Node *) malloc(sizeof(Node));
+		(*tree)->matricula = matricula;
+		(*tree)->salario = salario;
+		(*tree)->esq = NULL;
+		(*tree)->dir = NULL;
 
 	} else if(salario > (*tree)->salario) {
 		insertOne(&((*tree)->dir), matricula, salario);
-		
-	} else 
+	} else {
 		insertOne(&((*tree)->esq), matricula, salario);
+	}	
 }
 
 int tamanhoDir(Node *node){
-	if(!isEmpty(node)){
-		return 1 + tamanhoDir(node->dir);
-	} else return 0;
+	return (!isEmpty(node))? 1 + tamanhoDir(node->dir) : 0;
 }
 
 int vice(Node *tree){
@@ -92,7 +72,6 @@ int vice(Node *tree){
 		else
 			return (!isEmpty(tree->esq))? (tree->esq)->matricula : 0;	
 	} else return 0;
-
 }
 
 int max(Node *tree){
@@ -102,39 +81,41 @@ int max(Node *tree){
 int somaChefe(Node *tree){
 	if(!isEmpty(tree)){
 		int soma = 0;
-		if((tree->esq != NULL) || (tree->dir != NULL)) soma =  tree->salario;
+		if((tree->esq != NULL) || (tree->dir != NULL)) 
+			soma =  tree->salario;
 		
 		soma += somaChefe(tree->esq) + somaChefe(tree->dir);
 		return soma;
 	} return 0;
-	
 }
 
 void menu(Node *root){
 	while(1){
 		int matricula, salario;
+		system("cls || clear");
 		switch(questoes()){
-			case 1: 
-				printf("Matricula (se 0, para de inserir): \n");
-				scanf("%d", &matricula);
-				if(matricula != 0){
-					printf("Salario : \n");
-					scanf("%d", &salario);
-					insertOne(&root, matricula, salario);
-				}
-				insert(root); 
+			case 1:
+				do {
+					printf("Matricula (se 0, para de inserir): \n");
+					scanf("%d", &matricula);
+					
+					if(matricula != 0){
+						printf("Salario: \n");
+						scanf("%d", &salario);
+						insertOne(&root, matricula, salario);
+					}
+				} while (matricula != 0);
 				break;
 			case 2: printf("Vice: %d \n", vice(root)); break;
 			case 3: printf("SomaChefe: %d \n", somaChefe(root)); break;
 			case 4: preOrder(root); break;
 			case 5: 
-				scanf("%d", &matricula);
-				scanf("%d", &salario);
-				insertOne(&root, matricula, salario);	
+				insert(root);	
 				break;
 			case 6: printf("Tamanho da direita: %d \n", tamanhoDir(root)); break;
 			case 0: exit(1);
 		}
+		system("pause");
 	}
 }
 
