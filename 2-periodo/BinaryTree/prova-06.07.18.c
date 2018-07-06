@@ -15,7 +15,7 @@ void menu(Node *root);
 int questoes();
 
 //questao 1
-void insertOne(Node **tree, int matricula, int salario);
+void insert(Node **tree, int matricula, int salario);
 
 //questao 2
 int vice(Node *tree);
@@ -46,7 +46,7 @@ void preOrder(Node *node){
 	}
 }
 
-void insertOne(Node **tree, int matricula, int salario){
+void insert(Node **tree, int matricula, int salario){
 	if(isEmpty(*tree)){
 		*tree = (Node *) malloc(sizeof(Node));
 		(*tree)->matricula = matricula;
@@ -55,9 +55,9 @@ void insertOne(Node **tree, int matricula, int salario){
 		(*tree)->dir = NULL;
 
 	} else if(salario > (*tree)->salario) {
-		insertOne(&((*tree)->dir), matricula, salario);
+		insert(&((*tree)->dir), matricula, salario);
 	} else {
-		insertOne(&((*tree)->esq), matricula, salario);
+		insert(&((*tree)->esq), matricula, salario);
 	}	
 }
 
@@ -102,17 +102,13 @@ void menu(Node *root){
 					if(matricula != 0){
 						printf("Salario: \n");
 						scanf("%d", &salario);
-						insertOne(&root, matricula, salario);
+						insert(&root, matricula, salario);
 					}
 				} while (matricula != 0);
 				break;
 			case 2: printf("Vice: %d \n", vice(root)); break;
 			case 3: printf("SomaChefe: %d \n", somaChefe(root)); break;
 			case 4: preOrder(root); break;
-			case 5: 
-				insert(root);	
-				break;
-			case 6: printf("Tamanho da direita: %d \n", tamanhoDir(root)); break;
 			case 0: exit(1);
 		}
 		system("pause");
@@ -124,7 +120,6 @@ int questoes(){
 	printf("Questao   2 \n");
 	printf("Questao   3 \n");
 	printf("preOrder  4 \n");
-	printf("insertOne 5 \n");
 	printf("Sair      0 \n");
 	
 	int se;
