@@ -15,7 +15,8 @@ void menu(Node *root);
 int questoes();
 
 //questao 1
-void insert(Node **tree, int matricula, int salario);
+void insert(Node **tree);
+void insertOne(Node **tree, int matricula, int salario);
 
 //questao 2
 int vice(Node *tree);
@@ -46,7 +47,22 @@ void preOrder(Node *node){
 	}
 }
 
-void insert(Node **tree, int matricula, int salario){
+void insert(Node **tree){
+	int matricula, salario;
+	
+	printf("Matricula (se 0, para de inserir): \n");
+	scanf("%d", &matricula);
+	
+	if(matricula != 0){
+		printf("Salario : \n");
+		scanf("%d", &salario);
+		
+		insertOne(tree, matricula, salario);
+		insert(tree);
+	}
+}
+
+void insertOne(Node **tree, int matricula, int salario){
 	if(isEmpty(*tree)){
 		*tree = (Node *) malloc(sizeof(Node));
 		(*tree)->matricula = matricula;
@@ -55,9 +71,9 @@ void insert(Node **tree, int matricula, int salario){
 		(*tree)->dir = NULL;
 
 	} else if(salario > (*tree)->salario) {
-		insert(&((*tree)->dir), matricula, salario);
+		insertOne(&((*tree)->dir), matricula, salario);
 	} else {
-		insert(&((*tree)->esq), matricula, salario);
+		insertOne(&((*tree)->esq), matricula, salario);
 	}	
 }
 
@@ -74,44 +90,28 @@ int vice(Node *tree){
 	} else return 0;
 }
 
-int max(Node *tree){
-	return (!isEmpty(tree->dir))? max(tree->dir) : tree->matricula;
-}
-
 int somaChefe(Node *tree){
 	if(!isEmpty(tree)){
 		int soma = 0;
 		if((tree->esq != NULL) || (tree->dir != NULL)) 
-			soma =  tree->salario;
+			soma = tree->salario;
 		
 		soma += somaChefe(tree->esq) + somaChefe(tree->dir);
 		return soma;
 	} return 0;
+	
 }
 
 void menu(Node *root){
 	while(1){
 		int matricula, salario;
-		system("cls || clear");
 		switch(questoes()){
-			case 1:
-				do {
-					printf("Matricula (se 0, para de inserir): \n");
-					scanf("%d", &matricula);
-					
-					if(matricula != 0){
-						printf("Salario: \n");
-						scanf("%d", &salario);
-						insert(&root, matricula, salario);
-					}
-				} while (matricula != 0);
-				break;
+			case 1: insert(&root); break;
 			case 2: printf("Vice: %d \n", vice(root)); break;
 			case 3: printf("SomaChefe: %d \n", somaChefe(root)); break;
 			case 4: preOrder(root); break;
 			case 0: exit(1);
 		}
-		system("pause");
 	}
 }
 
@@ -126,5 +126,3 @@ int questoes(){
 	scanf("%d", &se);
 	return se;
 }
-
-
