@@ -4,6 +4,7 @@ import academic.entities.Classroom;
 import academic.entities.Student;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class ClassroomController {
@@ -22,35 +23,29 @@ public class ClassroomController {
     }
 
     public boolean addClassroom(Classroom classroom) {
-        var count = isClassroom(classroom.getId());
-        if (!count) classrooms.add(classroom);
+        var contain = isClassroom(classroom.getId());
+        if (!contain) classrooms.add(classroom);
 
-        return count;
+        return contain;
     }
 
     public boolean removeDiscipline(Classroom classroom) {
         return classrooms.remove(classroom);
     }
 
-    public ArrayList<String> showAllClassByStudant(int enrollment) {
-        var classrooms = new ArrayList<String>();
-        this.classrooms.forEach(c ->
-                c.getStudents().forEach(s -> {
-                    if (s.getEnrollment() == enrollment)
-                        classrooms.add(c.toString());
-                })
-        );
-
-        return classrooms;
+    public List<Classroom> showAllClassByStudant(int enrollment) {
+        return classrooms.stream()
+                .filter(c -> c.isStudentClass(enrollment))
+                .collect(Collectors.toList());
     }
 
     public boolean isClassroom(int id) {
         return (classrooms.stream().anyMatch(c -> c.getId() == id));
     }
 
-    public boolean addStudent(int turma, Student student) {
+    public int addStudent(int classroon, Student student) {
         var classroom = classrooms.stream()
-                .filter(c -> c.getId() == turma)
+                .filter(c -> c.getId() == classroon)
                 .collect(Collectors.toList());
 
         boolean count = true;
@@ -58,6 +53,11 @@ public class ClassroomController {
             count = classroom.get(0).getStudents().stream().anyMatch(s -> s.getEnrollment() == student.getEnrollment());
 
         if (!count) classroom.get(0).addStudent(student);
-        return count;
+        return (!count) ? classroom.get(0).getDisciplineID() : -1;
+    }
+
+    public Classroom getClassroom(int id) {
+        var rooms = classrooms.stream().filter(c -> c.getId() == id).collect(Collectors.toList());
+        return (rooms.size() > 0) ? rooms.get(0) : null;
     }
 }

@@ -15,7 +15,7 @@ public class Classroom {
     private int disciplineID;
     private int professorID;
     private ArrayList<Student> students;
-    private ArrayList<Date> hours; // Ver como vai fazer ainda --------------
+    private ArrayList<Date> hours; // Ver como fazer ainda --------------
 
     public Classroom(int id, int disciplineID, int professorID) {
         this.id = id;
@@ -84,19 +84,22 @@ public class Classroom {
 
     @Override
     public String toString() {
-        return "\n Classroom {" +
-                " \n id= " + id +
-                ",\n disciplineID= " + disciplineID +
-                ",\n professorID= " + professorID +
-                ",\n students= " + students +
-                ",\n hours= " + hours +
-                '}';
+        return "\nClassroom {" +
+                " \n -id= " + id +
+                ",\n -disciplineID= " + disciplineID +
+                ",\n -professorID= " + professorID +
+                ",\n -students= " + students +
+                ",\n -hours= " + hours + " }";
     }
 
-    public int addStudent(Student student){
+    public int addStudent(Student student) {
         var count = students.stream().anyMatch(s -> s.getEnrollment() == student.getEnrollment());
-        if(!count) students.add(student);
+        if (!count) students.add(student);
 
         return disciplineID;
+    }
+
+    public boolean isStudentClass(int studentID) {
+        return students.stream().anyMatch(s -> s.getEnrollment() == studentID);
     }
 }

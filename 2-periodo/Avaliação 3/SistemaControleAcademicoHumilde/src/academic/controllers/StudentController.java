@@ -4,7 +4,6 @@ import academic.entities.Student;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class StudentController {
@@ -23,7 +22,7 @@ public class StudentController {
     }
 
     public boolean addStudent(Student student) {
-        var contain = students.stream().anyMatch(s -> s.getEnrollment() == student.getEnrollment());
+        var contain = isStudent(student.getEnrollment());
         if (!contain) students.add(student);
 
         return !contain;
@@ -40,5 +39,8 @@ public class StudentController {
                 .collect(Collectors.toList());
     }
 
+    public boolean isStudent(int enrollment) {
+        return students.stream().anyMatch(s -> s.getEnrollment() == enrollment);
+    }
 
 }

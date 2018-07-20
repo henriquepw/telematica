@@ -20,10 +20,10 @@ public class DisciplineController {
     }
 
     public boolean addDiscipline(Discipline discipline) {
-        var count = isDiscipline(discipline.getId());
-        if (!count) disciplines.add(discipline);
+        var contain = isDiscipline(discipline.getId());
+        if (!contain) disciplines.add(discipline);
 
-        return count;
+        return !contain;
     }
 
     public boolean removeDiscipline(Discipline discipline) {

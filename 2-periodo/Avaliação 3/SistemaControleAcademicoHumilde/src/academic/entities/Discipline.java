@@ -74,9 +74,9 @@ public class Discipline {
 
     @Override
     public String toString() {
-        return "Discipline " + id + ": " +
+        return "\nDiscipline {" + id + ": " +
                 "\n -Hours: " + hours +
                 "\n -Name: " + name +
-                "\n -Description: " + description;
+                "\n -Description: " + description + " }";
     }
 }

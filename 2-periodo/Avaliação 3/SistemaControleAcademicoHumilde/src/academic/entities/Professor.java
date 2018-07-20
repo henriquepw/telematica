@@ -62,11 +62,10 @@ public class Professor {
 
     @Override
     public String toString() {
-        return "\n Professor {" +
+        return "\nProfessor {" +
                 "  \n -Enrollment= " + enrollment +
                 ", \n -Name= " + name +
-                ", \n -Classrooms= " + classrooms +
-                " }";
+                ", \n -Classrooms= " + classrooms + " }";
     }
 }
 

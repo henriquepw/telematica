@@ -1,6 +1,7 @@
 package academic.entities;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /*
  * Matricula
@@ -77,22 +78,50 @@ public class Student {
         this.enrolledDisciplines = enrolledDisciplines;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Student student = (Student) o;
+        return enrollment == student.enrollment &&
+                Float.compare(student.cre, cre) == 0 &&
+                Objects.equals(name, student.name) &&
+                Objects.equals(course, student.course) &&
+                Objects.equals(completedDisciplines, student.completedDisciplines) &&
+                Objects.equals(enrolledDisciplines, student.enrolledDisciplines);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(enrollment, name, cre, course, completedDisciplines, enrolledDisciplines);
+    }
+
+    @Override
+    public String toString() {
+        return "\nname {" +
+                " \n -enrollment= " + enrollment +
+                ",\n -cre= " + cre +
+                ",\n -course= " + course +
+                ",\n -completedDisciplines= " + completedDisciplines +
+                ",\n -enrolledDisciplines= " + enrolledDisciplines + '}';
+    }
+
     private boolean inCompletedDIsicpline(Discipline discipline) {
         var count = completedDisciplines.stream().anyMatch(d -> d.equals(discipline));
         return count;
     }
 
-    public boolean registerEnrolledDiscipline(Discipline discipline) {
-        var count = false;
-
+    public void addEnrolledDiscipline(Discipline discipline) {
         if (this.enrolledDisciplines.size() == MAX_DISCIPLINES)
             System.out.println("Limite de discilpinas que podem ser pagas ao mesmo tempo atingido!");
+
         else if (inCompletedDIsicpline(discipline))
             System.out.println("Aluno já pagou essa disciplina!");
-        else
-            this.enrolledDisciplines.add(discipline);
 
-        return count;
+        else if (enrolledDisciplines.stream().anyMatch(e -> e.getId() == discipline.getId()))
+            System.out.println("Aluno já paga essa disciplina!");
+
+        else this.enrolledDisciplines.add(discipline);
     }
 
     public boolean completeDiscipline(Discipline discipline) {
@@ -107,4 +136,6 @@ public class Student {
     public boolean removeEnrolledDIscipline(Discipline discipline) {
         return this.enrolledDisciplines.remove(discipline);
     }
+
+
 }
