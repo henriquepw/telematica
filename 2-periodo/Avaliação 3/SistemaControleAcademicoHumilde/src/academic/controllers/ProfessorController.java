@@ -19,7 +19,7 @@ public class ProfessorController {
         this.professors = professors;
     }
 
-    public boolean registerProfessor(Professor professor){
+    public boolean addProfessor(Professor professor){
         var contain = false;
         for (Professor p : professors)
             if (p.getEnrollment() == professor.getEnrollment()) {
@@ -31,4 +31,5 @@ public class ProfessorController {
 
         return !contain;
     }
+
 }

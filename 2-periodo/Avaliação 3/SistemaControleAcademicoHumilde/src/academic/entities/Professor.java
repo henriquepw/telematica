@@ -1,6 +1,7 @@
 package academic.entities;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /*
  * Matricula
@@ -44,7 +45,29 @@ public class Professor {
         this.classrooms = classrooms;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Professor professor = (Professor) o;
+        return enrollment == professor.enrollment &&
+                Objects.equals(name, professor.name) &&
+                Objects.equals(classrooms, professor.classrooms);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(enrollment, name, classrooms);
+    }
+
+    @Override
+    public String toString() {
+        return "\n Professor {" +
+                "  \n -Enrollment= " + enrollment +
+                ", \n -Name= " + name +
+                ", \n -Classrooms= " + classrooms +
+                " }";
+    }
 }
 
 

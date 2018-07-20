@@ -20,7 +20,7 @@ public class StudentController {
         this.students = students;
     }
 
-    public boolean registerStudent(Student student) {
+    public boolean addStudent(Student student) {
          /* var contain = students.stream()
                 .anyMatch(s -> s.getEnrollment() == student.getEnrollment());
         */
