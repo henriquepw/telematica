@@ -12,17 +12,17 @@ import java.util.Objects;
  * Horarios de aulas*/
 public class Classroom {
     private int id;
-    private Discipline discipline;
-    private Professor professor;
+    private int disciplineID;
+    private int professorID;
     private ArrayList<Student> students;
     private ArrayList<Date> hours; // Ver como vai fazer ainda --------------
 
-    public Classroom(int id, Discipline discipline, Professor professor, ArrayList<Student> students, ArrayList<Date> hours) {
+    public Classroom(int id, int disciplineID, int professorID) {
         this.id = id;
-        this.discipline = discipline;
-        this.professor = professor;
-        this.students = students;
-        this.hours = hours;
+        this.disciplineID = disciplineID;
+        this.professorID = professorID;
+        this.students = new ArrayList<>();
+        this.hours = new ArrayList<>();
     }
 
     public int getId() {
@@ -33,20 +33,20 @@ public class Classroom {
         this.id = id;
     }
 
-    public Discipline getDiscipline() {
-        return discipline;
+    public int getDisciplineID() {
+        return disciplineID;
     }
 
-    public void setDiscipline(Discipline discipline) {
-        this.discipline = discipline;
+    public void setDisciplineID(int disciplineID) {
+        this.disciplineID = disciplineID;
     }
 
-    public Professor getProfessor() {
-        return professor;
+    public int getProfessorID() {
+        return professorID;
     }
 
-    public void setProfessor(Professor professor) {
-        this.professor = professor;
+    public void setProfessorID(int professorID) {
+        this.professorID = professorID;
     }
 
     public ArrayList<Student> getStudents() {
@@ -71,24 +71,32 @@ public class Classroom {
         if (o == null || getClass() != o.getClass()) return false;
         Classroom classroom = (Classroom) o;
         return id == classroom.id &&
-                Objects.equals(discipline, classroom.discipline) &&
-                Objects.equals(professor, classroom.professor) &&
+                disciplineID == classroom.disciplineID &&
+                professorID == classroom.professorID &&
                 Objects.equals(students, classroom.students) &&
                 Objects.equals(hours, classroom.hours);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, discipline, professor, students, hours);
+        return Objects.hash(id, disciplineID, professorID, students, hours);
     }
 
     @Override
     public String toString() {
-        return "Classroom{" +
-                "id=" + id +
-                ", discipline={id=" + discipline.getId() +
-                ", name=" + discipline.getName() +
-                "}, hours=" + hours +
-                ", professor=" + discipline.getName() + '}';
+        return "\n Classroom {" +
+                " \n id= " + id +
+                ",\n disciplineID= " + disciplineID +
+                ",\n professorID= " + professorID +
+                ",\n students= " + students +
+                ",\n hours= " + hours +
+                '}';
+    }
+
+    public int addStudent(Student student){
+        var count = students.stream().anyMatch(s -> s.getEnrollment() == student.getEnrollment());
+        if(!count) students.add(student);
+
+        return disciplineID;
     }
 }

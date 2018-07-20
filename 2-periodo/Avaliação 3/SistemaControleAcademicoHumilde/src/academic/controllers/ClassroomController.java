@@ -1,8 +1,10 @@
 package academic.controllers;
 
 import academic.entities.Classroom;
+import academic.entities.Student;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class ClassroomController {
     private ArrayList<Classroom> classrooms;
@@ -20,13 +22,10 @@ public class ClassroomController {
     }
 
     public boolean addClassroom(Classroom classroom) {
-        var count = classrooms.stream().anyMatch(d -> d.getId() == classroom.getId());
-
+        var count = isClassroom(classroom.getId());
         if (!count) classrooms.add(classroom);
 
         return count;
-
-        //return (!count)? disciplines.add(discipline): false;
     }
 
     public boolean removeDiscipline(Classroom classroom) {
@@ -35,7 +34,6 @@ public class ClassroomController {
 
     public ArrayList<String> showAllClassByStudant(int enrollment) {
         var classrooms = new ArrayList<String>();
-
         this.classrooms.forEach(c ->
                 c.getStudents().forEach(s -> {
                     if (s.getEnrollment() == enrollment)
@@ -43,20 +41,23 @@ public class ClassroomController {
                 })
         );
 
-        /*
-        this.classrooms.forEach(c -> c.getStudents().stream()
-                .filter(s -> s.getEnrollment() == enrollment)
-                .map(s -> c.toString()).forEach(classrooms::add)
-        );
-        */
-
-        /*
-        this.classrooms.forEach(c -> c.getStudents().stream()
-                .filter(s -> s.getEnrollment() == enrollment)
-                .map(s -> classrooms.add(c.toString()))
-        );
-         */
-
         return classrooms;
+    }
+
+    public boolean isClassroom(int id) {
+        return (classrooms.stream().anyMatch(c -> c.getId() == id));
+    }
+
+    public boolean addStudent(int turma, Student student) {
+        var classroom = classrooms.stream()
+                .filter(c -> c.getId() == turma)
+                .collect(Collectors.toList());
+
+        boolean count = true;
+        if (classroom.size() > 0)
+            count = classroom.get(0).getStudents().stream().anyMatch(s -> s.getEnrollment() == student.getEnrollment());
+
+        if (!count) classroom.get(0).addStudent(student);
+        return count;
     }
 }

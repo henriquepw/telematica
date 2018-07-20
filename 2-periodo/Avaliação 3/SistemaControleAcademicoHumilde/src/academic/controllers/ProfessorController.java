@@ -20,16 +20,13 @@ public class ProfessorController {
     }
 
     public boolean addProfessor(Professor professor){
-        var contain = false;
-        for (Professor p : professors)
-            if (p.getEnrollment() == professor.getEnrollment()) {
-                contain = true;
-                break;
-            }
-
+        var contain = isProfessor(professor.getEnrollment());
         if (!contain) professors.add(professor);
 
         return !contain;
     }
 
+    public boolean isProfessor(int enrollment){
+        return professors.stream().anyMatch(p -> p.getEnrollment() == enrollment);
+    }
 }

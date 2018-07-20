@@ -1,9 +1,11 @@
 package academic.controllers;
 
-import academic.entities.Discipline;
 import academic.entities.Student;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class StudentController {
     private ArrayList<Student> students;
@@ -21,20 +23,7 @@ public class StudentController {
     }
 
     public boolean addStudent(Student student) {
-         /* var contain = students.stream()
-                .anyMatch(s -> s.getEnrollment() == student.getEnrollment());
-        */
-        /* var contain = students.parallelStream()
-                .anyMatch(s -> s.getEnrollment() == student.getEnrollment());
-         */
-
-        var contain = false;
-        for (Student s : students)
-            if (s.getEnrollment() == student.getEnrollment()) {
-                contain = true;
-                break;
-            }
-
+        var contain = students.stream().anyMatch(s -> s.getEnrollment() == student.getEnrollment());
         if (!contain) students.add(student);
 
         return !contain;
@@ -43,6 +32,12 @@ public class StudentController {
     public boolean removeStudent(Student student) {
         var contain = students.remove(student);
         return contain;
+    }
+
+    public List<Student> getStudent(int enrollment) {
+        return students.stream()
+                .filter(s -> s.getEnrollment() == enrollment)
+                .collect(Collectors.toList());
     }
 
 
