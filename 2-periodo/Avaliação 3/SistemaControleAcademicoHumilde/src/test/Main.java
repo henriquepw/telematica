@@ -1,35 +1,21 @@
 package test;
 
-import academic.controllers.ClassroomController;
-import academic.controllers.DisciplineController;
-import academic.controllers.ProfessorController;
-import academic.controllers.StudentController;
-import academic.entities.Classroom;
-import academic.entities.Discipline;
-import academic.entities.Professor;
 import academic.entities.Student;
+import academic.facede.Facede;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Main {
-    public static ClassroomController classroomController;
-    public static DisciplineController disciplineController;
-    public static ProfessorController professorController;
-    public static StudentController studentController;
+    public static Facede facede;
 
     public static void main(String[] args) {
-        classroomController = new ClassroomController();
-        disciplineController = new DisciplineController();
-        professorController = new ProfessorController();
-        studentController = new StudentController();
+        facede = new Facede();
 
-        disciplineController.addDiscipline(new Discipline(1, 10, "programação 2", "Estridutara de dados e poo"));
-        professorController.addProfessor(new Professor(2020, "Marcelo"));
-        studentController.addStudent(new Student(2017, "Henrique", "Telemática"));
-        classroomController.addClassroom(new Classroom(101, 1, 2020));
-        classroomController.addStudent(101, new Student(2017, "Henrique", "Telemática"));
-        professorController.addClassroom(2020, new Classroom(101, 1, 2020));
+        facede.registerDiscipline(1, 10, "programação 2", "Estridutara de dados e poo");
+        facede.registerProfessor(2020, "Marcelo");
+        facede.registerStudent(2017, "Henrique", "Telemática");
+        facede.registerClassrooom(101, 1, 2020);
+        facede.registerStudentInClass(2017, 101);
         menu();
     }
 
@@ -83,16 +69,16 @@ public class Main {
                     cadastroAluno();
                     break;
                 case 11: // Exibir todas as disciplinas
-                    System.out.println(disciplineController.getDisciplines().toString());
+                    System.out.println(facede.getDisciplines().toString());
                     break;
                 case 22: // Exibir todas os professores
-                    System.out.println(professorController.getProfessors().toString());
+                    System.out.println(facede.getProfessors().toString());
                     break;
                 case 33: // Exibir todas as turmas
-                    System.out.println(classroomController.getClassrooms().toString());
+                    System.out.println(facede.getClassrooms().toString());
                     break;
                 case 44: // Exibir todas os alunos
-                    System.out.println(studentController.getStudents().toString());
+                    System.out.println(facede.getStudents().toString());
                     break;
                 case 0:
                     stay = false;
@@ -115,8 +101,8 @@ public class Main {
         System.out.print("Descrição: ");
         var description = s.nextLine();
 
-        var count = disciplineController.addDiscipline(new Discipline(id, hours, name, description));
-        if (!count) System.out.println("Disciplina com esse id já existe");
+        if (!facede.registerDiscipline(id, hours, name, description))
+            System.out.println("Erro: Disciplina com esse id já existe");
     }
 
     public static void cadastroProfessor() {
@@ -127,8 +113,8 @@ public class Main {
         System.out.print("Matricula: ");
         var enrollment = s.nextInt();
 
-        var count = professorController.addProfessor(new Professor(enrollment, name));
-        if (!count) System.out.println("Professor com essa matricula já existe");
+        if (!facede.registerProfessor(enrollment, name))
+            System.out.println("Erro: Professor com essa matricula já existe");
     }
 
     public static void cadastroAluno() {
@@ -142,23 +128,23 @@ public class Main {
         System.out.print("Curso: ");
         String course = s.nextLine();
 
-        var count = studentController.addStudent(new Student(enrollment, name, course));
-        if (!count) System.out.println("Aluno com esse id já existe");
+        if (!facede.registerStudent(enrollment, name, course))
+            System.out.println("Aluno com esse id já existe");
     }
 
     public static void cadastroTurma() {
         var s = new Scanner(System.in);
         int id, disciplineID, professorID;
 
-        if (disciplineController.getDisciplines().size() == 0)
+        if (facede.getDisciplines().size() == 0)
             System.out.println("Cadastre uma disciplina antes de cadastrar uma turma.");
-        else if (professorController.getProfessors().size() == 0)
+        else if (facede.getProfessors().size() == 0)
             System.out.println("Cadastre um professor antes de cadastrar uma turma.");
         else {
             while (true) {
                 System.out.print("Codigo da turma: ");
                 id = s.nextInt();
-                if (classroomController.isClassroom(id))
+                if (facede.checkOutClassroom(id))
                     System.out.println("Turma com esse id já existe, digite outra.");
                 else break;
             }
@@ -166,7 +152,7 @@ public class Main {
             while (true) {
                 System.out.print("Codigo da disciplina: ");
                 disciplineID = s.nextInt();
-                if (!disciplineController.isDiscipline(disciplineID))
+                if (!facede.checkOutDiscipline(disciplineID))
                     System.out.println("Disciplina com esse id não existe, digite outro.");
                 else break;
             }
@@ -174,21 +160,19 @@ public class Main {
             while (true) {
                 System.out.print("Matricula do professor: ");
                 professorID = s.nextInt();
-                if (!professorController.isProfessor(professorID))
+                if (!facede.checkOutProfessor(professorID))
                     System.out.println("Professor com essa matricula não existe, digite outra.");
                 else break;
             }
 
-            var classroom = new Classroom(id, disciplineID, professorID);
-            professorController.addClassroom(professorID, classroom);
-            classroomController.addClassroom(classroom);
+            facede.registerClassrooom(id, disciplineID, professorID);
         }
     }
 
     public static void matriculaAlunos() {
-        if (studentController.getStudents().size() == 0)
+        if (facede.getStudents().size() == 0)
             System.out.println("Não existe aluno cadastrado para ser matriculado, cadastre um antes.");
-        else if (classroomController.getClassrooms().size() == 0)
+        else if (facede.getClassrooms().size() == 0)
             System.out.println("Não existe turma para adicionar aluno, crie uma antes.");
         else {
             var s = new Scanner(System.in);
@@ -198,50 +182,37 @@ public class Main {
             while (true) {
                 System.out.print("Codigo da turma: ");
                 classroomID = s.nextInt();
-                if (!classroomController.isClassroom(classroomID))
+                if (!facede.checkOutClassroom(classroomID))
                     System.out.println("Turma com esse id não existe, digite outro.");
                 else break;
             }
 
             boolean stay = true;
             while (stay) {
-                int studantID;
+                int enrollment;
                 while (true) {
                     System.out.print("Matricula do aluno (pra sair digite -1): ");
-                    studantID = s.nextInt();
+                    enrollment = s.nextInt();
 
-                    if (studantID < 0) {
+                    if (enrollment < 0) {
                         stay = false;
                         break;
-                    } else if (!studentController.isStudent(studantID))
+                    } else if (!facede.checkOutStudent(enrollment))
                         System.out.println("Aluno com esse id não existe, digite outro.");
-                    else if (classroomController.getClassroom(classroomID).isStudentClass(studantID))
+                    else if (facede.checkOutStudentInClass(enrollment, classroomID))
                         System.out.println("Aluno já está nessa turma");
                     else break;
                 }
 
-                final int finalStudantID = studantID;
-                if (stay) {
-                    studant = studentController.getStudents().stream()
-                            .filter(st -> st.getEnrollment() == finalStudantID)
-                            .collect(Collectors.toList()).get(0);
-
-                    final int finalDisciplineID = classroomController.addStudent(classroomID, studant);
-
-                    var discipline = disciplineController.getDisciplines().stream()
-                            .filter(d -> d.getId() == finalDisciplineID)
-                            .collect(Collectors.toList()).get(0);
-
-                    studant.addEnrolledDiscipline(discipline);
-                }
+                if (stay) facede.registerStudentInClass(enrollment, classroomID);
             }
         }
     }
 
     public static void exibeTurmasPorAluno() {
-        if (studentController.getStudents().size() == 0)
+        if (facede.getStudents().size() == 0)
             System.out.println("Não existe aluno cadastrado.");
-        else if (classroomController.getClassrooms().size() == 0)
+        else if (facede.getClassrooms().size() == 0)
             System.out.println("Não existe turma cadastrada.");
         else {
             var s = new Scanner(System.in);
@@ -251,19 +222,19 @@ public class Main {
                 System.out.print("Matricula do aluno: ");
                 enrollment = s.nextInt();
 
-                if (!studentController.isStudent(enrollment))
+                if (!facede.checkOutStudent(enrollment))
                     System.out.println("Aluno não existe, tente outro.");
                 else break;
             }
 
-            System.out.println(classroomController.showAllClassByStudant(enrollment));
+            System.out.println(facede.showAllClassByStudant(enrollment));
         }
     }
 
     public static void exibeAlunosPorProfessor() {
-        if (studentController.getStudents().size() == 0)
+        if (facede.getStudents().size() == 0)
             System.out.println("Não existe aluno cadastrado.");
-        else if (professorController.getProfessors().size() == 0)
+        else if (facede.getProfessors().size() == 0)
             System.out.println("Não existe professor cadastrado.");
         else {
             var s = new Scanner(System.in);
@@ -273,18 +244,18 @@ public class Main {
                 System.out.print("Matricula do professor: ");
                 enrollment = s.nextInt();
 
-                if (!professorController.isProfessor(enrollment))
+                if (!facede.checkOutProfessor(enrollment))
                     System.out.println("Professor não existe, tente outro.");
                 else break;
             }
 
-            System.out.println(classroomController.showAllStudentsByProfessor(enrollment));
+            System.out.println(facede.showAllStudentsByProfessor(enrollment));
         }
 
     }
 
     public static void removeTurma() {
-        if (classroomController.getClassrooms().size() == 0)
+        if (facede.getClassrooms().size() == 0)
             System.out.println("Não existe turma para ser removida.");
         else {
             var s = new Scanner(System.in);
@@ -294,15 +265,12 @@ public class Main {
                 System.out.print("Codigo da turma: ");
                 classID = s.nextInt();
 
-                if (!classroomController.isClassroom(classID))
+                if (!facede.checkOutClassroom(classID))
                     System.out.println("Turma não pode ser removida pos não existe.");
                 else break;
             }
 
-            professorController.removeClassroom(
-                    classroomController.getClassroom(classID).getId(),
-                    classroomController.removeClassroom(classID));
-
+            facede.removeClassroom(classID);
         }
     }
 }

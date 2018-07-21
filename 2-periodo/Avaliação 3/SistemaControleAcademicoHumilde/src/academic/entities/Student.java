@@ -1,5 +1,7 @@
 package academic.entities;
 
+import academic.abstractFactories.StudentFactory;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -12,7 +14,7 @@ import java.util.Objects;
  * lista de disciplinas cursadas
  * lista de disciplinas cursand
  */
-public class Student {
+public class Student extends Individual implements StudentFactory {
     private int enrollment;
     private String name;
     private float cre;
@@ -22,28 +24,11 @@ public class Student {
     private final short MAX_DISCIPLINES = 6;
 
     public Student(int enrollment, String name, String course) {
-        this.enrollment = enrollment;
-        this.name = name;
+        super(enrollment, name);
         this.course = course;
         this.cre = 0;
         this.completedDisciplines = new ArrayList<>();
         this.enrolledDisciplines = new ArrayList<>();
-    }
-
-    public int getEnrollment() {
-        return enrollment;
-    }
-
-    public void setEnrollment(int enrollment) {
-        this.enrollment = enrollment;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public float getCre() {
@@ -106,10 +91,20 @@ public class Student {
                 ",\n -enrolledDisciplines= " + enrolledDisciplines + '}';
     }
 
-    private boolean inCompletedDIsicpline(Discipline discipline) {
+    @Override
+    public boolean inCompletedDIsicpline(Discipline discipline) {
         return completedDisciplines.stream().anyMatch(d -> d.equals(discipline));
     }
 
+    @Override
+    public boolean completeDiscipline(Discipline discipline) {
+        var count = this.enrolledDisciplines.remove(discipline);
+        if (count) this.completedDisciplines.add(discipline);
+
+        return count;
+    }
+
+    @Override
     public void addEnrolledDiscipline(Discipline discipline) {
         if (enrolledDisciplines.size() == MAX_DISCIPLINES)
             System.out.println("Limite de discilpinas que podem ser pagas ao mesmo tempo atingido!");
@@ -123,13 +118,7 @@ public class Student {
         else this.enrolledDisciplines.add(discipline);
     }
 
-    public boolean completeDiscipline(Discipline discipline) {
-        var count = this.enrolledDisciplines.remove(discipline);
-        if (count) this.completedDisciplines.add(discipline);
-
-        return count;
-    }
-
+    @Override
     public boolean removeEnrolledDIscipline(Discipline discipline) {
         return this.enrolledDisciplines.remove(discipline);
     }

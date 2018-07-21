@@ -1,5 +1,7 @@
 package academic.entities;
 
+import academic.abstractFactories.ProfessorFactory;
+
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -10,32 +12,15 @@ import java.util.stream.Collectors;
  * Classes lecionadas
  * maximo de turma que pode ser lecionadas por 1 professor
  */
-public class Professor {
+public class Professor extends Individual implements ProfessorFactory {
     private int enrollment;
     private String name;
     private ArrayList<Classroom> classrooms;
     private final short MAX_CLASSROOMS = 6;
 
     public Professor(int enrollment, String name) {
-        this.enrollment = enrollment;
-        this.name = name;
+        super(enrollment, name);
         this.classrooms = new ArrayList<>();
-    }
-
-    public int getEnrollment() {
-        return enrollment;
-    }
-
-    public void setEnrollment(int enrollment) {
-        this.enrollment = enrollment;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public ArrayList<Classroom> getClassrooms() {
@@ -69,6 +54,7 @@ public class Professor {
                 ", \n -Classrooms= " + classrooms + " }";
     }
 
+    @Override
     public void addClassroom(Classroom classroom) {
         if (this.classrooms.size() == MAX_CLASSROOMS)
             System.out.println("Limite de turmas lecionadas atingido!");
@@ -79,12 +65,14 @@ public class Professor {
         else this.classrooms.add(classroom);
     }
 
+    @Override
     public void removeClassroom(int classroomID) {
         classrooms.remove(getClassroom(classroomID));
     }
 
-    public Classroom getClassroom(int id) {
-        var rooms = classrooms.stream().filter(c -> c.getId() == id).collect(Collectors.toList());
+    @Override
+    public Classroom getClassroom(int ClassroomID) {
+        var rooms = classrooms.stream().filter(c -> c.getId() == ClassroomID).collect(Collectors.toList());
         return (rooms.size() > 0) ? rooms.get(0) : null;
     }
 }

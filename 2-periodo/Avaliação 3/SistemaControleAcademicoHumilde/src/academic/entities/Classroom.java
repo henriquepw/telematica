@@ -1,8 +1,11 @@
 package academic.entities;
 
+import academic.abstractFactories.ClassroomFactory;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /*
  * Codigo
@@ -10,7 +13,7 @@ import java.util.Objects;
  * Professor
  * Lista de Alunos
  * Horarios de aulas*/
-public class Classroom {
+public class Classroom implements ClassroomFactory {
     private int id;
     private int disciplineID;
     private int professorID;
@@ -92,6 +95,7 @@ public class Classroom {
                 ",\n -hours= " + hours + " }";
     }
 
+    @Override
     public int addStudent(Student student) {
         if (students.stream().noneMatch(s -> s.getEnrollment() == student.getEnrollment()))
             students.add(student);
@@ -99,7 +103,20 @@ public class Classroom {
         return disciplineID;
     }
 
+    @Override
+    public boolean removeStudent(int StudentID) {
+        var student = getStudent(StudentID);
+        return students.remove(student);
+    }
+
+    @Override
     public boolean isStudentClass(int studentID) {
         return students.stream().anyMatch(s -> s.getEnrollment() == studentID);
+    }
+
+    @Override
+    public Student getStudent(int StudentID) {
+        var rooms = students.stream().filter(c -> c.getEnrollment() == StudentID).collect(Collectors.toList());
+        return (rooms.size() > 0) ? rooms.get(0) : null;
     }
 }
