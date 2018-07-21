@@ -107,12 +107,11 @@ public class Student {
     }
 
     private boolean inCompletedDIsicpline(Discipline discipline) {
-        var count = completedDisciplines.stream().anyMatch(d -> d.equals(discipline));
-        return count;
+        return completedDisciplines.stream().anyMatch(d -> d.equals(discipline));
     }
 
     public void addEnrolledDiscipline(Discipline discipline) {
-        if (this.enrolledDisciplines.size() == MAX_DISCIPLINES)
+        if (enrolledDisciplines.size() == MAX_DISCIPLINES)
             System.out.println("Limite de discilpinas que podem ser pagas ao mesmo tempo atingido!");
 
         else if (inCompletedDIsicpline(discipline))
@@ -126,9 +125,7 @@ public class Student {
 
     public boolean completeDiscipline(Discipline discipline) {
         var count = this.enrolledDisciplines.remove(discipline);
-
-        if (count)
-            this.completedDisciplines.add(discipline);
+        if (count) this.completedDisciplines.add(discipline);
 
         return count;
     }

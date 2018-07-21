@@ -29,8 +29,7 @@ public class StudentController {
     }
 
     public boolean removeStudent(Student student) {
-        var contain = students.remove(student);
-        return contain;
+        return students.remove(student);
     }
 
     public List<Student> getStudent(int enrollment) {

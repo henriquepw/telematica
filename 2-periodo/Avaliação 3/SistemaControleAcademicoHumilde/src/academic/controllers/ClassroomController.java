@@ -31,7 +31,7 @@ public class ClassroomController {
 
     public int removeClassroom(int classroomID) {
         var room = getClassroom(classroomID);
-        classrooms.remove(room);
+        classrooms.remove(getClassroom(classroomID));
 
         return room.getProfessorID();
     }
@@ -63,7 +63,8 @@ public class ClassroomController {
 
         boolean count = true;
         if (classroom.size() > 0)
-            count = classroom.get(0).getStudents().stream().anyMatch(s -> s.getEnrollment() == student.getEnrollment());
+            count = classroom.get(0).getStudents().stream()
+                    .anyMatch(s -> s.getEnrollment() == student.getEnrollment());
 
         if (!count) classroom.get(0).addStudent(student);
         return (!count) ? classroom.get(0).getDisciplineID() : -1;
