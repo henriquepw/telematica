@@ -80,8 +80,7 @@ public class Professor {
     }
 
     public void removeClassroom(int classroomID) {
-        var room = getClassroom(classroomID);
-        classrooms.remove(room);
+        classrooms.remove(getClassroom(classroomID));
     }
 
     public Classroom getClassroom(int id) {

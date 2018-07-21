@@ -93,8 +93,8 @@ public class Classroom {
     }
 
     public int addStudent(Student student) {
-        var count = students.stream().anyMatch(s -> s.getEnrollment() == student.getEnrollment());
-        if (!count) students.add(student);
+        if (students.stream().noneMatch(s -> s.getEnrollment() == student.getEnrollment()))
+            students.add(student);
 
         return disciplineID;
     }
