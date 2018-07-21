@@ -2,6 +2,7 @@ package academic.entities;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /*
  * Matricula
@@ -66,6 +67,26 @@ public class Professor {
                 "  \n -Enrollment= " + enrollment +
                 ", \n -Name= " + name +
                 ", \n -Classrooms= " + classrooms + " }";
+    }
+
+    public void addClassroom(Classroom classroom) {
+        if (this.classrooms.size() == MAX_CLASSROOMS)
+            System.out.println("Limite de turmas lecionadas atingido!");
+
+        else if (classrooms.stream().anyMatch(c -> c.getId() == classroom.getId()))
+            System.out.println("Professor já leciona essa turma!");
+
+        else this.classrooms.add(classroom);
+    }
+
+    public void removeClassroom(int classroomID) {
+        var room = getClassroom(classroomID);
+        classrooms.remove(room);
+    }
+
+    public Classroom getClassroom(int id) {
+        var rooms = classrooms.stream().filter(c -> c.getId() == id).collect(Collectors.toList());
+        return (rooms.size() > 0) ? rooms.get(0) : null;
     }
 }
 

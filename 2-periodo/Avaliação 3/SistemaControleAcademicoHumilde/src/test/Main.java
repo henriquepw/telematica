@@ -29,6 +29,7 @@ public class Main {
         studentController.addStudent(new Student(2017, "Henrique", "Telemática"));
         classroomController.addClassroom(new Classroom(101, 1, 2020));
         classroomController.addStudent(101, new Student(2017, "Henrique", "Telemática"));
+        professorController.addClassroom(2020, new Classroom(101, 1, 2020));
         menu();
     }
 
@@ -43,7 +44,6 @@ public class Main {
 
         System.out.println("Extras: ");
         System.out.println("8. Cadastar aluno");
-
         System.out.println("11. Exibir disciplinas");
         System.out.println("22. Exibir professores");
         System.out.println("33. Exibir turmas");
@@ -71,13 +71,13 @@ public class Main {
                     cadastroTurma();
                     break;
                 case 5: // Remover turma
-                    
+                    removeTurma();
                     break;
                 case 6: // Exibir todos as classe por aluno
-                    exibirTurmasPorAluno();
+                    exibeTurmasPorAluno();
                     break;
                 case 7: //Exibir todos os alunos por professor
-                    exibirAlunosPorProfessor();
+                    exibeAlunosPorProfessor();
                     break;
                 case 8: // Cadastro de aluno
                     cadastroAluno();
@@ -101,7 +101,6 @@ public class Main {
                     System.out.println("Comando invalido");
             }
     }
-
 
     public static void cadastroDisciplina() {
         var s = new Scanner(System.in);
@@ -180,7 +179,9 @@ public class Main {
                 else break;
             }
 
-            classroomController.addClassroom(new Classroom(id, disciplineID, professorID));
+            var classroom = new Classroom(id, disciplineID, professorID);
+            professorController.addClassroom(professorID, classroom);
+            classroomController.addClassroom(classroom);
         }
     }
 
@@ -237,23 +238,71 @@ public class Main {
         }
     }
 
-    public static void exibirTurmasPorAluno() {
-        var s = new Scanner(System.in);
-        int enrollment;
+    public static void exibeTurmasPorAluno() {
+        if (studentController.getStudents().size() == 0)
+            System.out.println("Não existe aluno cadastrado.");
+        else if (classroomController.getClassrooms().size() == 0)
+            System.out.println("Não existe turma cadastrada.");
+        else {
+            var s = new Scanner(System.in);
+            int enrollment;
 
-        while (true) {
-            System.out.print("Matricula do aluno: ");
-            enrollment = s.nextInt();
+            while (true) {
+                System.out.print("Matricula do aluno: ");
+                enrollment = s.nextInt();
 
-            if (!studentController.isStudent(enrollment))
-                System.out.println("Aluno não existe, tente outro.");
-            else break;
+                if (!studentController.isStudent(enrollment))
+                    System.out.println("Aluno não existe, tente outro.");
+                else break;
+            }
+
+            System.out.println(classroomController.showAllClassByStudant(enrollment));
         }
-
-        System.out.println(classroomController.showAllClassByStudant(enrollment));
     }
 
-    public static void  exibirAlunosPorProfessor(){
+    public static void exibeAlunosPorProfessor() {
+        if (studentController.getStudents().size() == 0)
+            System.out.println("Não existe aluno cadastrado.");
+        else if (professorController.getProfessors().size() == 0)
+            System.out.println("Não existe professor cadastrado.");
+        else {
+            var s = new Scanner(System.in);
+            int enrollment;
 
+            while (true) {
+                System.out.print("Matricula do professor: ");
+                enrollment = s.nextInt();
+
+                if (!professorController.isProfessor(enrollment))
+                    System.out.println("Professor não existe, tente outro.");
+                else break;
+            }
+
+            System.out.println(classroomController.showAllStudentsByProfessor(enrollment));
+        }
+
+    }
+
+    public static void removeTurma() {
+        if (classroomController.getClassrooms().size() == 0)
+            System.out.println("Não existe turma para ser removida.");
+        else {
+            var s = new Scanner(System.in);
+            int classID;
+
+            while (true) {
+                System.out.print("Codigo da turma: ");
+                classID = s.nextInt();
+
+                if (!classroomController.isClassroom(classID))
+                    System.out.println("Turma não pode ser removida pos não existe.");
+                else break;
+            }
+
+            professorController.removeClassroom(
+                    classroomController.getClassroom(classID).getId(),
+                    classroomController.removeClassroom(classID));
+
+        }
     }
 }

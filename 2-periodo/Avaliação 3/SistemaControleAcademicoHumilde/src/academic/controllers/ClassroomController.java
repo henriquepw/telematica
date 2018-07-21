@@ -29,14 +29,27 @@ public class ClassroomController {
         return contain;
     }
 
-    public boolean removeDiscipline(Classroom classroom) {
-        return classrooms.remove(classroom);
+    public int removeClassroom(int classroomID) {
+        var room = getClassroom(classroomID);
+        classrooms.remove(room);
+
+        return room.getProfessorID();
     }
 
     public List<Classroom> showAllClassByStudant(int enrollment) {
         return classrooms.stream()
                 .filter(c -> c.isStudentClass(enrollment))
                 .collect(Collectors.toList());
+    }
+
+    public List<Student> showAllStudentsByProfessor(int professorID) {
+        var studant = new ArrayList<Student>();
+        var rooms = classrooms.stream()
+                .filter(c -> c.getProfessorID() == professorID)
+                .collect(Collectors.toList());
+
+        rooms.forEach(r -> r.getStudents().forEach(s -> studant.add(s)));
+        return studant;
     }
 
     public boolean isClassroom(int id) {
