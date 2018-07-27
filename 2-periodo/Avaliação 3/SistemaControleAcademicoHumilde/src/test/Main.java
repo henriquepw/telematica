@@ -1,22 +1,35 @@
 package test;
 
-import academic.entities.Student;
-import academic.facede.Facede;
+import academic.facade.Facade;
 
 import java.util.*;
 
 public class Main {
-    public static Facede facede;
+    public static Facade facade;
 
     public static void main(String[] args) {
-        facede = new Facede();
+        facade = new Facade();
 
-        facede.registerDiscipline(1, 10, "programação 2", "Estridutara de dados e poo");
-        facede.registerProfessor(2020, "Marcelo");
-        facede.registerStudent(2017, "Henrique", "Telemática");
-        facede.registerClassrooom(101, 1, 2020);
-        facede.registerStudentInClass(2017, 101);
+        facade.registerDiscipline(1, 10, "programacao 2", "Estrutura de dados e poo");
+        facade.registerProfessor(2020, "Marcelo");
+        facade.registerStudent(2017, "Henrique", "Telematica");
+        facade.registerClassroom(101, 1, 2020);
+        facade.registerStudentInClass(2017, 101);
         menu();
+    }
+
+    public static int getInt() {
+        boolean stay = true;
+        int inteiro = 0;
+        while (stay) {
+            try {
+                inteiro = new Scanner(System.in).nextInt();
+                stay = false;
+            } catch (InputMismatchException e) {
+                System.out.println("Erro, tente novamente.");
+            }
+        }
+        return inteiro;
     }
 
     public static int options() {
@@ -36,7 +49,7 @@ public class Main {
         System.out.println("44. Exibir alunos");
         System.out.println("0. Sair");
 
-        return new Scanner(System.in).nextInt();
+        return getInt();
     }
 
     public static void menu() {
@@ -69,16 +82,16 @@ public class Main {
                     cadastroAluno();
                     break;
                 case 11: // Exibir todas as disciplinas
-                    System.out.println(facede.getDisciplines().toString());
+                    System.out.println(facade.getDisciplines().toString());
                     break;
                 case 22: // Exibir todas os professores
-                    System.out.println(facede.getProfessors().toString());
+                    System.out.println(facade.getProfessors().toString());
                     break;
                 case 33: // Exibir todas as turmas
-                    System.out.println(facede.getClassrooms().toString());
+                    System.out.println(facade.getClassrooms().toString());
                     break;
                 case 44: // Exibir todas os alunos
-                    System.out.println(facede.getStudents().toString());
+                    System.out.println(facade.getStudents().toString());
                     break;
                 case 0:
                     stay = false;
@@ -89,101 +102,130 @@ public class Main {
     }
 
     public static void cadastroDisciplina() {
-        var s = new Scanner(System.in);
+        Scanner sStr = new Scanner(System.in);
+        System.out.println("Digite -1 a qualquer momento para cancelar o cadastro.");
 
         System.out.print("Id: ");
-        var id = s.nextInt();
-        System.out.print("Carga horaria: ");
-        var hours = s.nextInt();
-        System.out.print("Nome: ");
-        s.nextLine();
-        var name = s.nextLine();
-        System.out.print("Descrição: ");
-        var description = s.nextLine();
+        int id = getInt();
+        if (id != -1) {
+            System.out.print("Carga horaria: ");
+            int hours = getInt();
 
-        if (!facede.registerDiscipline(id, hours, name, description))
-            System.out.println("Erro: Disciplina com esse id já existe");
-    }
+            if (hours != -1) {
+                System.out.print("Nome: ");
+                String name = sStr.nextLine();
 
-    public static void cadastroProfessor() {
-        var s = new Scanner(System.in);
+                if (!name.equals("-1")) {
+                    System.out.print("Descricao: ");
+                    String description = sStr.nextLine();
 
-        System.out.print("Nome: ");
-        var name = s.nextLine();
-        System.out.print("Matricula: ");
-        var enrollment = s.nextInt();
-
-        if (!facede.registerProfessor(enrollment, name))
-            System.out.println("Erro: Professor com essa matricula já existe");
-    }
-
-    public static void cadastroAluno() {
-        var s = new Scanner(System.in);
-
-        System.out.print("Nome: ");
-        var name = s.nextLine();
-        System.out.print("Matricula: ");
-        var enrollment = s.nextInt();
-        s.nextLine();
-        System.out.print("Curso: ");
-        String course = s.nextLine();
-
-        if (!facede.registerStudent(enrollment, name, course))
-            System.out.println("Aluno com esse id já existe");
-    }
-
-    public static void cadastroTurma() {
-        var s = new Scanner(System.in);
-        int id, disciplineID, professorID;
-
-        if (facede.getDisciplines().size() == 0)
-            System.out.println("Cadastre uma disciplina antes de cadastrar uma turma.");
-        else if (facede.getProfessors().size() == 0)
-            System.out.println("Cadastre um professor antes de cadastrar uma turma.");
-        else {
-            while (true) {
-                System.out.print("Codigo da turma: ");
-                id = s.nextInt();
-                if (facede.checkOutClassroom(id))
-                    System.out.println("Turma com esse id já existe, digite outra.");
-                else break;
+                    if (!description.equals("-1"))
+                        if (!facade.registerDiscipline(id, hours, name, description))
+                            System.out.println("Erro: Disciplina com esse id ja existe");
+                        else
+                            System.out.println("Cadastro feito com sucesso!");
+                }
             }
-
-            while (true) {
-                System.out.print("Codigo da disciplina: ");
-                disciplineID = s.nextInt();
-                if (!facede.checkOutDiscipline(disciplineID))
-                    System.out.println("Disciplina com esse id não existe, digite outro.");
-                else break;
-            }
-
-            while (true) {
-                System.out.print("Matricula do professor: ");
-                professorID = s.nextInt();
-                if (!facede.checkOutProfessor(professorID))
-                    System.out.println("Professor com essa matricula não existe, digite outra.");
-                else break;
-            }
-
-            facede.registerClassrooom(id, disciplineID, professorID);
         }
     }
 
-    public static void matriculaAlunos() {
-        if (facede.getStudents().size() == 0)
-            System.out.println("Não existe aluno cadastrado para ser matriculado, cadastre um antes.");
-        else if (facede.getClassrooms().size() == 0)
-            System.out.println("Não existe turma para adicionar aluno, crie uma antes.");
+    public static void cadastroProfessor() {
+        Scanner sStr = new Scanner(System.in);
+        System.out.println("Digite -1 a qualquer momento para cancelar o cadastro.");
+
+        System.out.print("Nome: ");
+        String name = sStr.nextLine();
+        if (!name.equals("-1")) {
+            System.out.print("Matricula: ");
+            int enrollment = getInt();
+
+            if (enrollment != -1)
+                if (!facade.registerProfessor(enrollment, name))
+                    System.out.println("Erro: Professor com essa matricula ja existe");
+                else
+                    System.out.println("Cadastro feito com sucesso!");
+        }
+    }
+
+    public static void cadastroAluno() {
+        Scanner s = new Scanner(System.in);
+        System.out.println("Digite -1 a qualquer momento para cancelar o cadastro.");
+
+        System.out.print("Nome: ");
+        String name = s.nextLine();
+        if (!name.equals("-1")) {
+            System.out.print("Matricula: ");
+            int enrollment = getInt();
+
+            if (enrollment != -1) {
+                System.out.print("Curso: ");
+                String course = s.nextLine();
+
+                if (!course.equals("-1"))
+                    if (!facade.registerStudent(enrollment, name, course))
+                        System.out.println("Aluno com esse id ja existe");
+                    else
+                        System.out.println("Cadastro feito com sucesso!");
+            }
+        }
+    }
+
+    public static void cadastroTurma() {
+        int id, disciplineID, professorID;
+
+        if (facade.getDisciplines().size() == 0)
+            System.out.println("Cadastre uma disciplina antes de cadastrar uma turma.");
+        else if (facade.getProfessors().size() == 0)
+            System.out.println("Cadastre um professor antes de cadastrar uma turma.");
         else {
-            var s = new Scanner(System.in);
-            int classroomID;
-            Student studant;
+            System.out.println("Digite -1 a qualquer momento para cancelar o cadastro.");
 
             while (true) {
                 System.out.print("Codigo da turma: ");
-                classroomID = s.nextInt();
-                if (!facede.checkOutClassroom(classroomID))
-                    System.out.println("Turma com esse id não existe, digite outro.");
+                id = getInt();
+                if (!facade.checkOutClassroom(id) || (id == -1)) break;
+                else System.out.println("Turma com esse id ja existe, digite outra.");
+            }
+
+            if (id != -1) {
+                while (true) {
+                    System.out.print("Codigo da disciplina: ");
+                    disciplineID = getInt();
+                    if (facade.checkOutDiscipline(disciplineID) || (disciplineID == -1)) break;
+                    else System.out.println("Disciplina com esse id nao existe, digite outro.");
+                }
+
+                if (disciplineID != -1) {
+                    while (true) {
+                        System.out.print("Matricula do professor: ");
+                        professorID = getInt();
+                        if (facade.checkOutProfessor(professorID) || (professorID == -1)) break;
+                        else System.out.println("Professor com essa matricula nao existe, digite outra.");
+                    }
+                    if (professorID != -1) {
+                        facade.registerClassroom(id, disciplineID, professorID);
+                        System.out.println("Cadastro feito com sucesso!");
+                    }
+                }
+            }
+        }
+    }
+
+    // tratar ---------------------------------------------------------------
+
+    public static void matriculaAlunos() {
+        if (facade.getStudents().size() == 0)
+            System.out.println("Nao existe aluno cadastrado para ser matriculado, cadastre um antes.");
+        else if (facade.getClassrooms().size() == 0)
+            System.out.println("Nao existe turma para adicionar aluno, crie uma antes.");
+        else {
+            int classroomID;
+
+            while (true) {
+                System.out.print("Codigo da turma: ");
+                classroomID = getInt();
+                if (!facade.checkOutClassroom(classroomID))
+                    System.out.println("Turma com esse id nao existe, digite outro.");
                 else break;
             }
 
@@ -192,85 +234,82 @@ public class Main {
                 int enrollment;
                 while (true) {
                     System.out.print("Matricula do aluno (pra sair digite -1): ");
-                    enrollment = s.nextInt();
+                    enrollment = getInt();
 
                     if (enrollment < 0) {
                         stay = false;
                         break;
-                    } else if (!facede.checkOutStudent(enrollment))
-                        System.out.println("Aluno com esse id não existe, digite outro.");
-                    else if (facede.checkOutStudentInClass(enrollment, classroomID))
-                        System.out.println("Aluno já está nessa turma");
+                    } else if (!facade.checkOutStudent(enrollment))
+                        System.out.println("Aluno com esse id nÃ£o existe, digite outro.");
+                    else if (facade.checkOutStudentInClass(enrollment, classroomID))
+                        System.out.println("Aluno jÃ¡ estÃ¡ nessa turma");
                     else break;
                 }
 
-                if (stay) facede.registerStudentInClass(enrollment, classroomID);
+                if (stay) facade.registerStudentInClass(enrollment, classroomID);
             }
         }
     }
 
     public static void exibeTurmasPorAluno() {
-        if (facede.getStudents().size() == 0)
-            System.out.println("Não existe aluno cadastrado.");
-        else if (facede.getClassrooms().size() == 0)
-            System.out.println("Não existe turma cadastrada.");
+        if (facade.getStudents().size() == 0)
+            System.out.println("NÃ£o existe aluno cadastrado.");
+        else if (facade.getClassrooms().size() == 0)
+            System.out.println("NÃ£o existe turma cadastrada.");
         else {
-            var s = new Scanner(System.in);
             int enrollment;
 
             while (true) {
                 System.out.print("Matricula do aluno: ");
-                enrollment = s.nextInt();
+                enrollment = getInt();
 
-                if (!facede.checkOutStudent(enrollment))
-                    System.out.println("Aluno não existe, tente outro.");
+                if (!facade.checkOutStudent(enrollment))
+                    System.out.println("Aluno nÃ£o existe, tente outro.");
                 else break;
             }
 
-            System.out.println(facede.showAllClassByStudant(enrollment));
+            System.out.println(facade.showAllClassByStudant(enrollment));
         }
     }
 
     public static void exibeAlunosPorProfessor() {
-        if (facede.getStudents().size() == 0)
-            System.out.println("Não existe aluno cadastrado.");
-        else if (facede.getProfessors().size() == 0)
-            System.out.println("Não existe professor cadastrado.");
+        if (facade.getStudents().size() == 0)
+            System.out.println("NÃ£o existe aluno cadastrado.");
+        else if (facade.getProfessors().size() == 0)
+            System.out.println("NÃ£o existe professor cadastrado.");
         else {
-            var s = new Scanner(System.in);
             int enrollment;
 
             while (true) {
                 System.out.print("Matricula do professor: ");
-                enrollment = s.nextInt();
+                enrollment = getInt();
 
-                if (!facede.checkOutProfessor(enrollment))
-                    System.out.println("Professor não existe, tente outro.");
+                if (!facade.checkOutProfessor(enrollment))
+                    System.out.println("Professor nÃ£o existe, tente outro.");
                 else break;
             }
 
-            System.out.println(facede.showAllStudentsByProfessor(enrollment));
+            System.out.println(facade.showAllStudentsByProfessor(enrollment));
         }
 
     }
 
     public static void removeTurma() {
-        if (facede.getClassrooms().size() == 0)
-            System.out.println("Não existe turma para ser removida.");
+        if (facade.getClassrooms().size() == 0)
+            System.out.println("NÃ£o existe turma para ser removida.");
         else {
-            var s = new Scanner(System.in);
             int classID;
 
             while (true) {
                 System.out.print("Codigo da turma: ");
-                classID = s.nextInt();
+                classID = getInt();
 
-                if (!facede.checkOutClassroom(classID))
-                    System.out.println("Turma não pode ser removida pos não existe.");
+                if (!facade.checkOutClassroom(classID))
+                    System.out.println("Turma nÃ£o pode ser removida pos nÃ£o existe.");
                 else break;
             }
 
-            facede.removeClassroom(classID);
+            facade.removeClassroom(classID);
         }
     }
 }

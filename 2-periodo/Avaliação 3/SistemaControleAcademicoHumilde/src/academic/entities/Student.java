@@ -15,8 +15,6 @@ import java.util.Objects;
  * lista de disciplinas cursand
  */
 public class Student extends Individual implements StudentFactory {
-    private int enrollment;
-    private String name;
     private float cre;
     private String course;
     private ArrayList<Discipline> completedDisciplines;
@@ -68,9 +66,9 @@ public class Student extends Individual implements StudentFactory {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Student student = (Student) o;
-        return enrollment == student.enrollment &&
+        return getEnrollment() == student.getEnrollment() &&
                 Float.compare(student.cre, cre) == 0 &&
-                Objects.equals(name, student.name) &&
+                Objects.equals(getName(), student.getName()) &&
                 Objects.equals(course, student.course) &&
                 Objects.equals(completedDisciplines, student.completedDisciplines) &&
                 Objects.equals(enrolledDisciplines, student.enrolledDisciplines);
@@ -78,13 +76,13 @@ public class Student extends Individual implements StudentFactory {
 
     @Override
     public int hashCode() {
-        return Objects.hash(enrollment, name, cre, course, completedDisciplines, enrolledDisciplines);
+        return Objects.hash(getEnrollment(), getName(), cre, course, completedDisciplines, enrolledDisciplines);
     }
 
     @Override
     public String toString() {
-        return "\nname {" +
-                " \n -enrollment= " + enrollment +
+        return "\nname {" + name +
+                " \n -enrollment= " + getEnrollment() +
                 ",\n -cre= " + cre +
                 ",\n -course= " + course +
                 ",\n -completedDisciplines= " + completedDisciplines +
@@ -98,7 +96,7 @@ public class Student extends Individual implements StudentFactory {
 
     @Override
     public boolean completeDiscipline(Discipline discipline) {
-        var count = this.enrolledDisciplines.remove(discipline);
+        boolean count = this.enrolledDisciplines.remove(discipline);
         if (count) this.completedDisciplines.add(discipline);
 
         return count;

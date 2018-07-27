@@ -23,14 +23,14 @@ public class ClassroomController {
     }
 
     public boolean addClassroom(Classroom classroom) {
-        var contain = isClassroom(classroom.getId());
+        boolean contain = isClassroom(classroom.getId());
         if (!contain) classrooms.add(classroom);
 
         return contain;
     }
 
     public int removeClassroom(int classroomID) {
-        var room = getClassroom(classroomID);
+        Classroom room = getClassroom(classroomID);
         classrooms.remove(getClassroom(classroomID));
 
         return room.getProfessorID();
@@ -43,8 +43,8 @@ public class ClassroomController {
     }
 
     public List<Student> showAllStudentsByProfessor(int professorID) {
-        var studant = new ArrayList<Student>();
-        var rooms = classrooms.stream()
+        List<Student> studant = new ArrayList<Student>();
+        List<Classroom> rooms = classrooms.stream()
                 .filter(c -> c.getProfessorID() == professorID)
                 .collect(Collectors.toList());
 
@@ -57,7 +57,7 @@ public class ClassroomController {
     }
 
     public int addStudent(int classroon, Student student) {
-        var classroom = classrooms.stream()
+        List<Classroom> classroom = classrooms.stream()
                 .filter(c -> c.getId() == classroon)
                 .collect(Collectors.toList());
 
@@ -71,7 +71,7 @@ public class ClassroomController {
     }
 
     public Classroom getClassroom(int id) {
-        var rooms = classrooms.stream().filter(c -> c.getId() == id).collect(Collectors.toList());
+        List<Classroom> rooms = classrooms.stream().filter(c -> c.getId() == id).collect(Collectors.toList());
         return (rooms.size() > 0) ? rooms.get(0) : null;
     }
 }

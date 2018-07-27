@@ -3,6 +3,7 @@ package academic.entities;
 import academic.abstractFactories.ProfessorFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -13,8 +14,6 @@ import java.util.stream.Collectors;
  * maximo de turma que pode ser lecionadas por 1 professor
  */
 public class Professor extends Individual implements ProfessorFactory {
-    private int enrollment;
-    private String name;
     private ArrayList<Classroom> classrooms;
     private final short MAX_CLASSROOMS = 6;
 
@@ -36,21 +35,21 @@ public class Professor extends Individual implements ProfessorFactory {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Professor professor = (Professor) o;
-        return enrollment == professor.enrollment &&
-                Objects.equals(name, professor.name) &&
+        return getEnrollment() == professor.getEnrollment() &&
+                Objects.equals(getName(), professor.getName()) &&
                 Objects.equals(classrooms, professor.classrooms);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(enrollment, name, classrooms);
+        return Objects.hash(getEnrollment(), getName(), classrooms);
     }
 
     @Override
     public String toString() {
         return "\nProfessor {" +
-                "  \n -Enrollment= " + enrollment +
-                ", \n -Name= " + name +
+                "  \n -Enrollment= " + this.getEnrollment() +
+                ", \n -Name= " + this.getName() +
                 ", \n -Classrooms= " + classrooms + " }";
     }
 
@@ -72,7 +71,7 @@ public class Professor extends Individual implements ProfessorFactory {
 
     @Override
     public Classroom getClassroom(int ClassroomID) {
-        var rooms = classrooms.stream().filter(c -> c.getId() == ClassroomID).collect(Collectors.toList());
+        List<Classroom> rooms = classrooms.stream().filter(c -> c.getId() == ClassroomID).collect(Collectors.toList());
         return (rooms.size() > 0) ? rooms.get(0) : null;
     }
 }

@@ -4,6 +4,7 @@ import academic.abstractFactories.ClassroomFactory;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -30,10 +31,6 @@ public class Classroom implements ClassroomFactory {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public int getDisciplineID() {
@@ -105,7 +102,7 @@ public class Classroom implements ClassroomFactory {
 
     @Override
     public boolean removeStudent(int StudentID) {
-        var student = getStudent(StudentID);
+        Student student = getStudent(StudentID);
         return students.remove(student);
     }
 
@@ -116,7 +113,7 @@ public class Classroom implements ClassroomFactory {
 
     @Override
     public Student getStudent(int StudentID) {
-        var rooms = students.stream().filter(c -> c.getEnrollment() == StudentID).collect(Collectors.toList());
-        return (rooms.size() > 0) ? rooms.get(0) : null;
+        List<Student> student = students.stream().filter(c -> c.getEnrollment() == StudentID).collect(Collectors.toList());
+        return (student.size() > 0) ? student.get(0) : null;
     }
 }

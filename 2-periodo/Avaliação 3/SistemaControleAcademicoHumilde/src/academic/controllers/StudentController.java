@@ -22,7 +22,7 @@ public class StudentController {
     }
 
     public boolean addStudent(Student student) {
-        var contain = isStudent(student.getEnrollment());
+        boolean contain = isStudent(student.getEnrollment());
         if (!contain) students.add(student);
 
         return !contain;

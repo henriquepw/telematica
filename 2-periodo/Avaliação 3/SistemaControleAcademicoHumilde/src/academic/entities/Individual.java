@@ -1,8 +1,8 @@
 package academic.entities;
 
 public class Individual {
-    private int enrollment;
-    private String name;
+    protected int enrollment;
+    protected String name;
 
     public Individual(int enrollment, String name) {
         this.enrollment = enrollment;
@@ -11,10 +11,6 @@ public class Individual {
 
     public int getEnrollment() {
         return enrollment;
-    }
-
-    public void setEnrollment(int enrollment) {
-        this.enrollment = enrollment;
     }
 
     public String getName() {

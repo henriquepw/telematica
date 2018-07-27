@@ -4,6 +4,7 @@ import academic.entities.Classroom;
 import academic.entities.Professor;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class ProfessorController {
@@ -21,10 +22,9 @@ public class ProfessorController {
         this.professors = professors;
     }
 
-    public boolean addProfessor(Professor professor) {
-        var contain = isProfessor(professor.getEnrollment());
-        if (!contain) professors.add(professor);
-
+    public boolean addProfessor(int enrollment, String name) {
+        boolean contain = isProfessor(enrollment);
+        if (!contain) professors.add(new Professor(enrollment, name));
         return !contain;
     }
 
@@ -33,7 +33,7 @@ public class ProfessorController {
     }
 
     public Professor getProfessor(int enrollment) {
-        var professor = professors.stream()
+        List<Professor> professor = professors.stream()
                 .filter(p -> p.getEnrollment() == enrollment)
                 .collect(Collectors.toList());
 

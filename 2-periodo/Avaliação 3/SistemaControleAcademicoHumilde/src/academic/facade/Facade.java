@@ -1,4 +1,4 @@
-package academic.facede;
+package academic.facade;
 
 import academic.controllers.ClassroomController;
 import academic.controllers.DisciplineController;
@@ -13,13 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Facede {
+public class Facade {
     private ClassroomController classroomController;
     private DisciplineController disciplineController;
     private ProfessorController professorController;
     private StudentController studentController;
 
-    public Facede() {
+    public Facade() {
         this.classroomController = new ClassroomController();
         this.disciplineController = new DisciplineController();
         this.professorController = new ProfessorController();
@@ -30,7 +30,7 @@ public class Facede {
         return disciplineController.getDisciplines();
     }
 
-    public ArrayList<Professor> getProfessors() {
+    public List<Professor> getProfessors() {
         return professorController.getProfessors();
     }
 
@@ -67,27 +67,27 @@ public class Facede {
     }
 
     public boolean registerProfessor(int enrollment, String name) {
-        return professorController.addProfessor(new Professor(enrollment, name));
+        return professorController.addProfessor(enrollment, name);
     }
 
     public boolean registerStudent(int enrollment, String name, String course) {
         return studentController.addStudent(new Student(enrollment, name, course));
     }
 
-    public void registerClassrooom(int classroomID, int disciplineID, int professorID) {
-        var classroom = new Classroom(classroomID, disciplineID, professorID);
+    public void registerClassroom(int classroomID, int disciplineID, int professorID) {
+        Classroom classroom = new Classroom(classroomID, disciplineID, professorID);
 
         professorController.addClassroom(professorID, classroom);
         classroomController.addClassroom(classroom);
     }
 
     public void registerStudentInClass(int enrollment, int classroomID) {
-        var studant = getStudents().stream()
+        Student studant = getStudents().stream()
                 .filter(st -> st.getEnrollment() == enrollment)
                 .collect(Collectors.toList()).get(0);
 
         final int finalDisciplineID = classroomController.addStudent(classroomID, studant);
-        var discipline = getDisciplines().stream()
+        Discipline discipline = getDisciplines().stream()
                 .filter(d -> d.getId() == finalDisciplineID)
                 .collect(Collectors.toList()).get(0);
 

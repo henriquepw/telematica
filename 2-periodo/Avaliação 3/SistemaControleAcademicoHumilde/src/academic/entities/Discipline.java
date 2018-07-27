@@ -28,10 +28,6 @@ public class Discipline {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public int getHours() {
         return hours;
     }
