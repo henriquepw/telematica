@@ -224,92 +224,80 @@ public class Main {
             while (true) {
                 System.out.print("Codigo da turma: ");
                 classroomID = getInt();
-                if (!facade.checkOutClassroom(classroomID))
-                    System.out.println("Turma com esse id nao existe, digite outro.");
-                else break;
+                if (facade.checkOutClassroom(classroomID) || classroomID == -1) break;
+                else System.out.println("Turma com esse id nao existe, digite outro.");
             }
 
-            boolean stay = true;
-            while (stay) {
-                int enrollment;
-                while (true) {
-                    System.out.print("Matricula do aluno (pra sair digite -1): ");
-                    enrollment = getInt();
+            if (classroomID != -1) {
+                boolean stay = true;
+                while (stay) {
+                    int enrollment;
+                    while (true) {
+                        System.out.print("Matricula do aluno (pra sair digite -1): ");
+                        enrollment = getInt();
 
-                    if (enrollment < 0) {
-                        stay = false;
-                        break;
-                    } else if (!facade.checkOutStudent(enrollment))
-                        System.out.println("Aluno com esse id nÃ£o existe, digite outro.");
-                    else if (facade.checkOutStudentInClass(enrollment, classroomID))
-                        System.out.println("Aluno jÃ¡ estÃ¡ nessa turma");
-                    else break;
+                        if (enrollment < 0) {
+                            stay = false;
+                            break;
+                        } else if (!facade.checkOutStudent(enrollment))
+                            System.out.println("Aluno com esse id nao existe, digite outro.");
+                        else if (facade.checkOutStudentInClass(enrollment, classroomID))
+                            System.out.println("Aluno ja esta nessa turma");
+                        else break;
+                    }
+
+                    if (stay) facade.registerStudentInClass(enrollment, classroomID);
                 }
-
-                if (stay) facade.registerStudentInClass(enrollment, classroomID);
             }
         }
     }
 
     public static void exibeTurmasPorAluno() {
         if (facade.getStudents().size() == 0)
-            System.out.println("NÃ£o existe aluno cadastrado.");
+            System.out.println("Nao existe aluno cadastrado.");
         else if (facade.getClassrooms().size() == 0)
-            System.out.println("NÃ£o existe turma cadastrada.");
+            System.out.println("Nao existe turma cadastrada.");
         else {
             int enrollment;
+            System.out.print("Matricula do aluno: ");
+            enrollment = getInt();
 
-            while (true) {
-                System.out.print("Matricula do aluno: ");
-                enrollment = getInt();
-
-                if (!facade.checkOutStudent(enrollment))
-                    System.out.println("Aluno nÃ£o existe, tente outro.");
-                else break;
-            }
-
-            System.out.println(facade.showAllClassByStudant(enrollment));
+            if (!facade.checkOutStudent(enrollment))
+                System.out.println("Aluno nao existe, tente outro.");
+            else
+                System.out.println(facade.showAllClassByStudant(enrollment));
         }
     }
 
     public static void exibeAlunosPorProfessor() {
         if (facade.getStudents().size() == 0)
-            System.out.println("NÃ£o existe aluno cadastrado.");
+            System.out.println("Nao existe aluno cadastrado.");
         else if (facade.getProfessors().size() == 0)
-            System.out.println("NÃ£o existe professor cadastrado.");
+            System.out.println("Nao existe professor cadastrado.");
         else {
             int enrollment;
+            System.out.print("Matricula do professor: ");
+            enrollment = getInt();
 
-            while (true) {
-                System.out.print("Matricula do professor: ");
-                enrollment = getInt();
-
-                if (!facade.checkOutProfessor(enrollment))
-                    System.out.println("Professor nÃ£o existe, tente outro.");
-                else break;
-            }
-
-            System.out.println(facade.showAllStudentsByProfessor(enrollment));
+            if (!facade.checkOutProfessor(enrollment))
+                System.out.println("Professor nao existe, tente outro.");
+            else
+                System.out.println(facade.showAllStudentsByProfessor(enrollment));
         }
-
     }
 
     public static void removeTurma() {
         if (facade.getClassrooms().size() == 0)
-            System.out.println("NÃ£o existe turma para ser removida.");
+            System.out.println("Nao existe turma para ser removida.");
         else {
             int classID;
 
-            while (true) {
-                System.out.print("Codigo da turma: ");
-                classID = getInt();
+            System.out.print("Codigo da turma: ");
+            classID = getInt();
 
-                if (!facade.checkOutClassroom(classID))
-                    System.out.println("Turma nÃ£o pode ser removida pos nÃ£o existe.");
-                else break;
-            }
-
-            facade.removeClassroom(classID);
+            if (!facade.checkOutClassroom(classID))
+                System.out.println("Turma nao pode ser removida pos nao existe.");
+            else facade.removeClassroom(classID);
         }
     }
 }
