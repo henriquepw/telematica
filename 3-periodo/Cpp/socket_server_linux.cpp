@@ -6,9 +6,9 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 
-using namespace std;
-
 #define PORT 4041
+
+using namespace std;
 
 int main() {
   struct sockaddr_in client_addr;
@@ -19,12 +19,11 @@ int main() {
   addr.sin_port = htons(PORT);
 
   // Criando o socket do servidor e do cliente
-  int server = socket(AF_INET, SOCK_STREAM, 0);
-  int client;
+  int server = socket(AF_INET, SOCK_STREAM, 0), client;
   socklen_t client_size = sizeof client_addr;
 
   // lidando o socket ao ip
-  bind(server, (struct sockaddr *) &addr, sizeof addr);
+  bind(server, (struct sockaddr *)&addr, sizeof addr);
 
   // permintir que o socket receba conexões (socket, numero de conexões)
   listen(server, 5);
@@ -32,7 +31,7 @@ int main() {
   cout << "/* Chat init */" << '\n';
   while (1) {
     // aceitando o pedido do cliente
-    client = accept(server, (struct sockaddr *) &client_addr, &client_size);
+    client = accept(server, (struct sockaddr *)&client_addr, &client_size);
 
     while (1) {
       char buff[255];
@@ -42,7 +41,6 @@ int main() {
       cout << buff;
       fflush(stdout);
     }
-
   }
 
   return 0;

@@ -24,7 +24,7 @@ int main() {
   socklen_t client_size = sizeof client_addr;
 
   // lidando o socket ao ip
-  bind(server, (struct sockaddr *) &addr, sizeof addr);
+  bind(server, (struct sockaddr *)&addr, sizeof addr);
 
   // permintir que o socket receba conexões (socket, numero de conexões)
   listen(server, SOMAXCONN);
@@ -47,8 +47,9 @@ int main() {
       int sock = fd_array[i];
 
       if (sock == server) {
-        //aceitando novo cliente
-        //client = accept(server, (struct sockaddr *) &client_addr, &client_size);
+        // aceitando novo cliente
+        // client = accept(server, (struct sockaddr *) &client_addr,
+        // &client_size);
         client = accept(server, nullptr, nullptr);
 
         // adicionado o novo cliente a lista de clientes
@@ -59,7 +60,7 @@ int main() {
         send(client, msg.c_str(), msg.size() + 1, 0);
       } else {
         char buff[255];
-        int  inp = recv(client, buff, sizeof buff, 0);
+        int inp = recv(client, buff, sizeof buff, 0);
 
         if (inp <= 0) {
           // finalizando o cliente e removendo da lista
@@ -67,7 +68,7 @@ int main() {
           FD_CLR(sock, &master);
         } else {
           stringstream msgstring;
-          msgstring << "Client " << i << ": "  << inp;
+          msgstring << "Client " << i << ": " << inp;
           string msg = msgstring.str();
 
           for (int i = 0; i < fd_array.size(); i++) {
