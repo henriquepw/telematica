@@ -5,11 +5,11 @@ import threading
 def client(c_skt, add):
     response = ''
     while response != '\x18':
-        response = c_skt.recv(1024)
+        response = c_skt.recv(1024).decode("utf-8")
         print("{}: {}".format(add, response))
 
+    print("{} has desconected...".format(add))
     c_skt.close()
-
 
 
 IP = "0.0.0.0"
