@@ -33,6 +33,9 @@ int main() {
   FD_ZERO(&master);
   FD_SET(server, &master);
 
+  vector<int> fd_array;
+  fd_array.push_back(server);
+
   cout << "/* Chat init */" << '\n';
   while (true) {
     // copia do master
@@ -40,8 +43,8 @@ int main() {
 
     // pegando os clientes conectados
     int clients = select(0, &cmaster, nullptr, nullptr, nullptr);
-    for (int i = 0; i < clients; i++) {
-      int sock = cmaster.fd_array[i];
+    for (int i = 1; i < clients; i++) {
+      int sock = fd_array[i];
 
       if (sock == server) {
         //aceitando novo cliente
@@ -50,6 +53,7 @@ int main() {
 
         // adicionado o novo cliente a lista de clientes
         FD_SET(client, &master);
+        fd_array.push_back(client);
 
         string msg = "Bem vindo ao chat";
         send(client, msg.c_str(), msg.size() + 1, 0);
@@ -66,8 +70,8 @@ int main() {
           msgstring << "Client " << i << ": "  << inp;
           string msg = msgstring.str();
 
-          for (int i = 0; i < master.fd_count; i++) {
-            int out = master.fd_array[i];
+          for (int i = 0; i < fd_array.size(); i++) {
+            int out = fd_array[i];
             if (out != sock && out != server) {
               send(out, msg.c_str(), msg.size(), 0);
             }

@@ -11,8 +11,6 @@ using namespace std;
 #define PORT 4041
 
 int main() {
-  char buff[255];
-
   struct sockaddr_in client_addr;
   struct sockaddr_in addr;
 
@@ -37,6 +35,7 @@ int main() {
     client = accept(server, (struct sockaddr *) &client_addr, &client_size);
 
     while (1) {
+      char buff[255];
       int x = recv(client, buff, sizeof buff, 0);
       send(client, buff, x, 0);
 
