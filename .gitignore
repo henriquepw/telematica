@@ -89,7 +89,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-
 # Pycharm
 .idea/
 
@@ -196,3 +195,5 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+*/.vs/
