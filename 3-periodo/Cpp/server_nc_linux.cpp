@@ -36,7 +36,7 @@ int main() {
   bind(server, (struct sockaddr *)&addr, sizeof addr);=
   listen(server, 1);
 
-  cout << "/* Chat ininicado na porta " << port << " */ \n";
+  cout << "/* Chat inicicado na porta " << port << " */ \n";
   while (true) {
     // aceitando o pedido do cliente
     client = accept(server, (struct sockaddr *)&client_addr, &client_size);
