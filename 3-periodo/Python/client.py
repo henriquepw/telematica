@@ -4,7 +4,7 @@ host = '192.168.0.198'
 post = '4040'
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#host, post = input('Host:port: ').split(':')
+# host, post = input('Host:port: ').split(':')
 
 try:
     client.connect((host, int(post)))
