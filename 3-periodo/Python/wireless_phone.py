@@ -7,7 +7,7 @@ server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((IP, PORT))
 server.listen(socket.SOMAXCONN)
 
-print("/* Telefone sem fio na porta 1159 - para sair -> CTRL + X */")
+print("/* Telefone sem fio - 1159* /")
 while True:
     client_skt, addr = server.accept()
     response = client_skt.recv(1024)
