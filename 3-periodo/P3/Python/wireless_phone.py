@@ -7,12 +7,12 @@ server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((IP, PORT))
 server.listen(socket.SOMAXCONN)
 
-print("/* Telefone sem fio - 1159* /")
+print('/* Telefone sem fio - 1159 */')
 while True:
     client_skt, addr = server.accept()
     response = client_skt.recv(1024)
 
-    print("{}: {}".format(addr[0], response.decode("utf-8")))
+    print("{}: {}".format(addr[0], response.decode('utf-8')))
     client_skt.close()
     add = input('Proximo: ')
 

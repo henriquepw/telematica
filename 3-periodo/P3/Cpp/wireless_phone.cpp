@@ -28,17 +28,29 @@ int main() {
 
     char buff[1024];
     int x = recv(client, buff, sizeof buff, 0);
-    unsigned int prox = 0;
 
     cout << "Recebido de " << client_addr.sin_addr.s_addr << ": " << buff << '\n';
-    cout << "IP do proximo: "; cin >> prox;
-    client_addr.sin_addr.s_addr = htonl(prox);
 
-    connect(sock, (struct sockaddr *)&client_addr, client_size);
+    fflush(stdin);
+    unsigned int prox = 0;
+
+    /*
+    cout << "IP do proximo: "; cin >> prox;
+    close(client);
+
+    client = socket(AF_INET, SOCK_STREAM, 0);
+    client_addr.sin_addr.s_addr = htonl(prox);
+    client_addr.sin_family = AF_INET;
+    client_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    client_size = sizeof client_addr;
+
+    connect(client, (struct sockaddr *)&client_addr, client_size);
     send(client, buff, sizeof buff, 0);
+    */
 
     close(client);
   }
 
+  close(sock);
   return 0;
 }

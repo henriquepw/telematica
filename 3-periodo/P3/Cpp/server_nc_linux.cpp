@@ -33,7 +33,7 @@ int main() {
   socklen_t client_size = sizeof client_addr;
 
   // ligando o socket ao ip e limitando o numero de conexões
-  bind(server, (struct sockaddr *)&addr, sizeof addr);=
+  bind(server, (struct sockaddr *)&addr, sizeof addr);
   listen(server, 1);
 
   cout << "/* Chat inicicado na porta " << port << " */ \n";
@@ -41,12 +41,12 @@ int main() {
     // aceitando o pedido do cliente
     client = accept(server, (struct sockaddr *)&client_addr, &client_size);
 
-    while (client > 0) {
-      char buff[255];
+    while (true) {
+      char buff[1024];
       int x = recv(client, buff, sizeof buff, 0);
 
       cout << buff;
-      fflush(stdin);
+      fflush(stdout);
     }
 
     close(client);
