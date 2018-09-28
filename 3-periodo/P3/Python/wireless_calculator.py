@@ -30,7 +30,7 @@ while True:
 
     out = response
     if response[0] in operators:
-        sign, numbers, num = response[0], response[2:].split(','), []
+        sign, numbers, num = response[0], response[1:].split(','), []
         try:
             num = [float(x) for x in numbers]
             out = calculator(sign, num)
@@ -45,7 +45,7 @@ while True:
     client_skt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         client_skt.connect((add, int(PORT)))
-        client_skt.send(bytes(out, 'utf8'))
+        client_skt.send(bytes(response, 'utf8'))
     except socket.error as e:
         print(e)
 
