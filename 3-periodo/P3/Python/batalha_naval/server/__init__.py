@@ -32,9 +32,9 @@ def init():
 
 
 def print_block(block):
-    if block == -1:
+    if block == 1:
         print('\033[7;31m[X]\033[7;30m \033[m', end='')
-    elif block == 1:
+    elif block == 6:
         print('\033[7;32m[V]\033[7;30m \033[m', end='')
     else:
         print('\033[7;30m[ ] \033[m', end='')
@@ -75,16 +75,20 @@ def print_map(matrix):
         print()
 
 
-def is_valid(matrix, coo):
+def is_valid(matrix, coo, tam, orientation):
     A = 65
     if len(coo) == 3:
         if coo[0].isalpha() and coo[2].isdigit():
             coord = coo.split(' ')
-            coord[1] = int(coord[1])
+            coord[0], coord[1] = ord(coord[0]) - A, int(coord[1])
 
-            if 0 < coord[1] < 13 and A < ord(coord[0]) < ord('N'):
-                if matrix[ord(coord[0] - A)][coord[1]] == 0:
-                    return True
+            if 0 < coord[1] < 13 and 0 < coord[0] < 13:
+                if orientation.upper() == 'V':
+                    pass
+                else:
+                    pass
+                    # if matrix[coord[0]][coord[1]] == 0:
+                    #    return True
 
     return False
 
@@ -98,6 +102,7 @@ def is_valid(matrix, coo):
 
 
 def fill_map():
+    ori = input('vertical ou horizontal [v/H]?')
     coo = input('Digite a coordenada que sera o começo da embarcação. Ex: B 1: ')
 
 
