@@ -131,7 +131,7 @@ def init():
                     j += 1
                 else:
                     print('Posição invalida.')
-
+        server.ready(login)
     else:
         print('Sem vagas')
 

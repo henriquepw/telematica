@@ -4,7 +4,7 @@ from typing import Tuple
 
 
 maps = []
-players = -1
+players = []
 TAM = 14
 
 # 12 X 12 com bordas
@@ -60,13 +60,17 @@ def set_poss(player, siz, poss, orientation) -> bool:
     return True
 
 
+def start(player):
+    players[player] = True
+
+
 def login() -> int:
     global players
-    if players < 2:
-        players += 1
-        return players
+    if len(players) < 2:
+        players.append(False)
+        return len(players) - 1
 
-    return 0
+    return -1
 
 
 def main():
