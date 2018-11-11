@@ -1,3 +1,4 @@
+import time
 import xmlrpc.client
 from copy import deepcopy
 from typing import Tuple
@@ -16,7 +17,7 @@ def print_block(block, visible):
         print('\033[7;32m[V]\033[7;30m \033[m', end='')
     else:
         if visible:
-            print('\033[7;30m[',block,'] \033[m', end='')
+            print('\033[7;30m[', block, '] \033[m', end='')
         else:
             print('\033[7;30m[ ] \033[m', end='')
 
@@ -101,15 +102,33 @@ def get_position() -> list:
     return coo
 
 
+def game(msg: str):
+    global server
+    if('Aguardando o outro jogador...'):
+        print(msg)
+        while True:
+            if server.waiting():
+                break
+            time.sleep(2)
+
+    print('Todos prontos')
+    # Pronto pra jogar -----
+
+
 def init():
     global server, map_def
     login = server.login()
     if login > -1:
+        '''
         enbacations = {
-            'subimarinos': [2, 4],
-            'Cruzadores': [3, 3],
-            'Encouraçados': [4, 2],
+            'subimarinos': [2, 1],
+            'Cruzadores': [3, 1],
+            'Encouraçados': [4, 1],
             'porta-aviões': [5, 1]}
+        '''
+
+        enbacations = {
+            'subimarinos': [2, 1]}
 
         print('Batalha naval')
         print('Peenchar sua mapa de defesa')
@@ -131,7 +150,8 @@ def init():
                     j += 1
                 else:
                     print('Posição invalida.')
-        server.ready(login)
+
+        game(server.ready(login))
     else:
         print('Sem vagas')
 

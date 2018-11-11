@@ -1,6 +1,7 @@
 from xmlrpc.server import SimpleXMLRPCServer
 from copy import deepcopy
-from typing import Tuple
+import threading as th
+import time
 
 
 maps = []
@@ -35,17 +36,15 @@ def set_poss(player, siz, poss, orientation) -> bool:
     print('Posição: ', poss)
     print('Orientação ', orientation)
 
-    length = (poss[0] -1, poss[0] + siz)
-    width = (poss[1] -1, poss[1] + 3)
+    length = (poss[0] - 1, poss[0] + siz)
+    width = (poss[1] - 1, poss[1] + 3)
 
     if orientation == 'V':
         length, width = width, length
 
     print_map(maps[player])
-    print('Blocos: ')
     for i in range(width[0], width[1]):
         for j in range(length[0], length[1]):
-            print(maps[player][i][j])
             if maps[player][i][j] != 0 and maps[player][i][j] != -1:
                 return False
 
@@ -60,8 +59,14 @@ def set_poss(player, siz, poss, orientation) -> bool:
     return True
 
 
-def start(player):
+def ready(player) -> str:
+    global players
     players[player] = True
+    if players[0] and players[1]:
+        return 'Jogadores prontos, começar a partida? (s/N)'
+    else:
+        print('Jogador ', player + 1, ' esta pronto.')
+        return 'Aguardando o outro jogador...'
 
 
 def login() -> int:
@@ -73,12 +78,25 @@ def login() -> int:
     return -1
 
 
+def waiting() -> bool:
+    global players
+    if players[0] and players[1]:
+        return True
+    
+    return False
+
+
+def register(server: SimpleXMLRPCServer):
+    server.register_function(login)
+    server.register_function(set_poss)
+    server.register_function(ready)
+    server.register_function(waiting)
+
 def main():
     print('Server init...')
     server = SimpleXMLRPCServer(('0.0.0.0', 9999))
 
-    server.register_function(login)
-    server.register_function(set_poss)
+    register(server)
 
     print('Ctrl + C to end')
     server.serve_forever()
