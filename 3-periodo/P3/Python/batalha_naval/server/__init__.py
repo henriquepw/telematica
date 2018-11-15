@@ -6,9 +6,17 @@ import time
 
 maps = []
 players = []
+TURN = 0
 TAM = 14
 
+missed = (-1, 1, 6, 0)
 # 12 X 12 com bordas
+
+def next(turn: int) -> int:
+    return (turn + 1) % 2
+
+def get_turn() -> int:
+    return TURN
 
 
 def init_maps() -> list:
@@ -25,7 +33,7 @@ def init_maps() -> list:
     return [player1, player2]
 
 
-def print_map(matrix):
+def print_map(matrix: list):
     for k in range(1, TAM - 1):
         print(matrix[k])
 
@@ -59,14 +67,15 @@ def set_poss(player, siz, poss, orientation) -> bool:
     return True
 
 
-def ready(player) -> str:
+def ready(player: int) -> str:
     global players
     players[player] = True
-    if players[0] and players[1]:
-        return 'Jogadores prontos, começar a partida? (s/N)'
-    else:
-        print('Jogador ', player + 1, ' esta pronto.')
-        return 'Aguardando o outro jogador...'
+    if len(players) == 2:
+        if players[0] and players[1]:
+            return 'Jogadores prontos'
+
+    print('Jogador ', player + 1, ' esta pronto.')
+    return 'Aguardando o outro jogador...'
 
 
 def login() -> int:
@@ -80,10 +89,33 @@ def login() -> int:
 
 def waiting() -> bool:
     global players
-    if players[0] and players[1]:
-        return True
+    if len(players) == 2:
+        if players[0] and players[1]:
+            return True
     
     return False
+
+
+def get_opponent(player: int) -> list:
+    opp = next(player)
+    return maps[opp]
+
+
+def played(login: int, poss: list) -> bool:
+    global TURN, maps
+    atk = next(login)
+    TURN = atk
+
+    print(maps[atk][poss[0]][poss[1]])
+    shot = maps[atk][poss[0]][poss[1]]
+    if shot in missed:
+        if shot == 0:
+            maps[atk][poss[0]][poss[1]] = 1
+        return False
+ 
+    maps[atk][poss[0]][poss[1]] = 6
+    return True
+
 
 
 def register(server: SimpleXMLRPCServer):
@@ -91,6 +123,9 @@ def register(server: SimpleXMLRPCServer):
     server.register_function(set_poss)
     server.register_function(ready)
     server.register_function(waiting)
+    server.register_function(get_opponent)
+    server.register_function(get_turn)
+    server.register_function(played)
 
 def main():
     print('Server init...')
