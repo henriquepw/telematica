@@ -14,12 +14,12 @@ def print_block(block, visible):
     if block == 1:
         print('\033[7;31m[X]\033[m ', end='')
     elif block == 6:
-        print('\033[7;32m[V]\033[m ', end='')
+        print('\033[7;92m[V]\033[m ', end='')
     else:
         if visible:
-            print('\033[7;33m[', block, ']\033[m ', end='')
+            print('\033[7;94m[', block, ']\033[m ', end='')
         else:
-            print('\033[7;33m[ ]\033[m ', end='')
+            print('\033[7;94m[ ]\033[m ', end='')
 
 
 def print_line(matrix, i, visible):
@@ -109,34 +109,38 @@ def game(msg: str, login: int):
             if server.waiting():
                 break
             time.sleep(2)
-    
-    map_atk = server.get_opponent(login)
 
-    print_map(map_atk, visible=True)
-    
     # Pronto pra jogar -----
     print('Todos prontos')
-    while True: # serve.winner()
+    while True:
+        if server.get_winner() != -1 or server.get_players() == 0:
+            break
+
         if (server.get_turn() == login):
+            map_atk, map_def = server.get_maps(login)
             print_maps()
 
-            poss = get_position(msg='Sua vez, escolhar um bloco para atacar, EX: B1: ')
-            result = server.played(login, poss)
+            poss = get_position(
+                msg='Sua vez, escolhar um bloco para atacar, EX: B1: ')
+            result, map_atk, map_def = server.played(login, poss)
             print(result)
 
-            map_atk[poss[0]][poss[1]] = 6 if result else 1
+            if server.check_winner(login):
+                break
 
-            '''
-            if result:
-                map_atk[poss[0]][poss[1]] = 6
-            else:
-                map_atk[poss[0]][poss[1]] = 1
-            '''
+            server.set_turn(server.next(login))
             print_maps()
             print('Aguardando')
-        else:
-            #esperondo
+        else:  # esperando
             time.sleep(2)
+
+    print('Fim do jogo')
+    if server.get_winner() == login:
+        print('Vitoria')
+    else:
+        print('Derrota')
+
+    server.reset()
 
 
 def init():

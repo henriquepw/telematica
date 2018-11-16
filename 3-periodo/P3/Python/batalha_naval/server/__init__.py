@@ -1,22 +1,39 @@
 from xmlrpc.server import SimpleXMLRPCServer
 from copy import deepcopy
+from typing import Tuple
 import threading as th
 import time
 
 
+missed = (-1, 1, 6, 0)
+valid = (2, 3, 4, 5)
 maps = []
 players = []
-TURN = 0
+winner = -1
+turn = 0
 TAM = 14
 
-missed = (-1, 1, 6, 0)
-# 12 X 12 com bordas
 
-def next(turn: int) -> int:
-    return (turn + 1) % 2
+def next(value=turn) -> int:
+    return (value + 1) % 2
+
 
 def get_turn() -> int:
-    return TURN
+    return turn
+
+
+def get_winner() -> int:
+    return winner
+
+
+def get_players()-> int:
+    return len(players)
+
+
+def set_turn(value: int) -> int:
+    global turn
+    turn = value
+    return turn
 
 
 def init_maps() -> list:
@@ -92,7 +109,7 @@ def waiting() -> bool:
     if len(players) == 2:
         if players[0] and players[1]:
             return True
-    
+
     return False
 
 
@@ -101,21 +118,47 @@ def get_opponent(player: int) -> list:
     return maps[opp]
 
 
-def played(login: int, poss: list) -> bool:
-    global TURN, maps
+def get_maps(login: int) -> [list, list]:
     atk = next(login)
-    TURN = atk
+    return maps[atk], maps[login]
+
+
+def played(login: int, poss: list) -> bool:
+    global maps
+    atk = next(login)
 
     print(maps[atk][poss[0]][poss[1]])
     shot = maps[atk][poss[0]][poss[1]]
     if shot in missed:
         if shot == 0:
             maps[atk][poss[0]][poss[1]] = 1
-        return False
- 
+        return False, maps[atk], maps[login]
+
     maps[atk][poss[0]][poss[1]] = 6
+    return True, maps[atk], maps[login]
+
+
+def check_winner(login: int) -> bool:
+    global winner
+
+    atk = next(login)
+    for line in maps[atk]:
+        for block in line:
+            if block in valid:
+                return False
+
+    print('Vencedor: jogador', login + 1)
+    winner = login
     return True
 
+
+def reset() -> bool:
+    global maps, players, winner, turn
+    maps = init_maps()
+    players = []
+    winner = -1
+    turn = 0
+    return True
 
 
 def register(server: SimpleXMLRPCServer):
@@ -124,8 +167,16 @@ def register(server: SimpleXMLRPCServer):
     server.register_function(ready)
     server.register_function(waiting)
     server.register_function(get_opponent)
+    server.register_function(get_maps)
+    server.register_function(get_winner)
+    server.register_function(get_players)
     server.register_function(get_turn)
+    server.register_function(set_turn)
+    server.register_function(next)
     server.register_function(played)
+    server.register_function(check_winner)
+    server.register_function(reset)
+
 
 def main():
     print('Server init...')
