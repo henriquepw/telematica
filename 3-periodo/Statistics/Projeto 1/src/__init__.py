@@ -46,6 +46,15 @@ for y in xadrez.columns.tolist():
 ############
 # graficos #
 ############
+
+styler_div = {
+    'margin': 30,
+    'padding': 50,
+    'width': '800px',
+    'height': '700px',
+    'justify-content': 'center'
+}
+
 faixa_etaria = html.Div([
     html.H2('Faixa etária'),
 
@@ -58,7 +67,7 @@ faixa_etaria = html.Div([
     ),
 
     dcc.Graph(id='graph-faixa')
-])
+], style=styler_div, className='card')
 
 causa_exclusao = html.Div([
     html.H2('Causa da exclusão'),
@@ -70,7 +79,7 @@ causa_exclusao = html.Div([
     ),
 
     dcc.Graph(id='graph-causa')
-])
+], style=styler_div, className='card')
 
 grau_instituicao = html.Div([
     html.H2('Grau de instituição'),
@@ -82,7 +91,7 @@ grau_instituicao = html.Div([
     ),
 
     dcc.Graph(id='graph-grau')
-])
+], style=styler_div, className='card')
 
 xadrez_carcere = html.Div([
     html.H2('O xadrez do cárcere'),
@@ -96,13 +105,14 @@ xadrez_carcere = html.Div([
         value=years[0],
         marks={y: str(y) for y in years}
     )
-])
+], style=styler_div, className='card')
 
 
 ########
 # Dash #
 ########
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+external_stylesheets = [
+    'https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 app.layout = html.Div([
@@ -110,7 +120,14 @@ app.layout = html.Div([
     faixa_etaria,
     causa_exclusao,
     grau_instituicao
-])
+], style={
+    'padding-top': 40,
+    'background-color': '#888',
+    'justify-content': 'center',
+    'align-items': 'center',
+    'display': 'flex',
+    'flex-wrap': 'wrap'
+})
 
 
 ############################
@@ -149,8 +166,7 @@ def update_grau(value):
     data = [go.Bar(
         y=grau[value].tolist(),
         x=grau.index.tolist(),
-        marker=color,
-        orientation='v')]
+        marker=color)]
 
     return go.Figure(data=data)
 
@@ -159,10 +175,9 @@ def update_grau(value):
     Output(component_id='graph-xadrez', component_property='figure'),
     [Input(component_id='slider-xadrez', component_property='value')])
 def update_xadrez(value):
-    data = [go.Bar(
-        y=xadrez[value].tolist(),
-        x=xadrez.index.tolist(),
-        marker=color
+    data = [go.Pie(
+        values=xadrez[value].tolist(),
+        labels=xadrez.index.tolist()
     )]
 
     return go.Figure(data=data)
