@@ -50,9 +50,10 @@ for y in xadrez.columns.tolist():
 styler_div = {
     'margin': 30,
     'padding': 50,
-    'width': '800px',
-    'height': '700px',
-    'justify-content': 'center'
+    'width': '80%',
+    'height': '50%',
+    'justify-content': 'center',
+    'box-shadow': '0px 5px 15px #aaaaaa'
 }
 
 faixa_etaria = html.Div([
@@ -122,7 +123,7 @@ app.layout = html.Div([
     grau_instituicao
 ], style={
     'padding-top': 40,
-    'background-color': '#888',
+    'background-color': '#ebebeb',
     'justify-content': 'center',
     'align-items': 'center',
     'display': 'flex',
