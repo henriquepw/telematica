@@ -39,9 +39,7 @@ op_causa = []
 for c in causa.columns.tolist():
     op_causa.append({'label': c, 'value': c})
 
-years = []
-for y in xadrez.columns.tolist():
-    years.append(y)
+years = [y for y in xadrez.columns.tolist()]
 
 ############
 # graficos #
