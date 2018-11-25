@@ -41,6 +41,10 @@ for c in causa.columns.tolist():
 
 years = [y for y in xadrez.columns.tolist()]
 
+plots = [
+    {'label': 'Pie', 'value': 'Pie'},
+    {'label': 'Line', 'value': 'Line'}
+]
 ############
 # graficos #
 ############
@@ -54,6 +58,18 @@ styler_div = {
     'box-shadow': '0px 5px 15px #aaaaaa'
 }
 
+causa_exclusao = html.Div([
+    html.H2('Causa da exclusão'),
+
+    dcc.Dropdown(
+        id='dropdown-causa',
+        options=op_causa,
+        value='Total'
+    ),
+
+    dcc.Graph(id='graph-causa')
+], style=styler_div, className='card')
+
 faixa_etaria = html.Div([
     html.H2('Faixa etária'),
 
@@ -66,18 +82,6 @@ faixa_etaria = html.Div([
     ),
 
     dcc.Graph(id='graph-faixa')
-], style=styler_div, className='card')
-
-causa_exclusao = html.Div([
-    html.H2('Causa da exclusão'),
-
-    dcc.Dropdown(
-        id='dropdown-causa',
-        options=op_causa,
-        value='Total'
-    ),
-
-    dcc.Graph(id='graph-causa')
 ], style=styler_div, className='card')
 
 grau_instituicao = html.Div([
@@ -94,6 +98,12 @@ grau_instituicao = html.Div([
 
 xadrez_carcere = html.Div([
     html.H2('O xadrez do cárcere'),
+
+    dcc.Dropdown(
+        id='dropdown-xadrez',
+        options=plots,
+        value='Pie'
+    ),
 
     dcc.Graph(id='graph-xadrez'),
 
@@ -116,8 +126,8 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 app.layout = html.Div([
     xadrez_carcere,
-    faixa_etaria,
     causa_exclusao,
+    faixa_etaria,
     grau_instituicao
 ], style={
     'padding-top': 40,
@@ -132,6 +142,34 @@ app.layout = html.Div([
 ############################
 # Atualização dos graficos #
 ############################
+@app.callback(
+    Output(component_id='graph-xadrez', component_property='figure'),
+    [Input(component_id='dropdown-xadrez', component_property='value'),
+     Input(component_id='slider-xadrez', component_property='value')])
+def update_graph(value, slide):
+    if value == 'Pie':
+        data = [go.Pie(
+            values=xadrez[slide].tolist(),
+            labels=xadrez.index.tolist()
+        )]
+    elif value == 'Line':
+        xa = xadrez.transpose()
+        data = [
+            go.Scatter(
+                x=xa.index,
+                y=xa['Presos'],
+                name='Presos'),
+            go.Scatter(
+                x=xa.index,
+                y=xa['Vagas'],
+                name='Vagas'),
+            go.Scatter(
+                x=xa.index,
+                y=xa['Déficite'],
+                name='Déficite')
+        ]
+
+    return go.Figure(data=data)
 
 
 @app.callback(
@@ -166,18 +204,6 @@ def update_grau(value):
         y=grau[value].tolist(),
         x=grau.index.tolist(),
         marker=color)]
-
-    return go.Figure(data=data)
-
-
-@app.callback(
-    Output(component_id='graph-xadrez', component_property='figure'),
-    [Input(component_id='slider-xadrez', component_property='value')])
-def update_xadrez(value):
-    data = [go.Pie(
-        values=xadrez[value].tolist(),
-        labels=xadrez.index.tolist()
-    )]
 
     return go.Figure(data=data)
 
