@@ -41,7 +41,7 @@ def print_maps(visible=False):
         print(chr(ord('B') + i - 1), end=' ')
         print_line(map_atk, i, visible)
         print(' ' * 12, chr(ord('B') + i - 1), end=' ')
-        print_line(map_def, i, visible)
+        print_line(map_def, i, True)
         print()
 
 
@@ -83,18 +83,27 @@ def get_orientation() -> chr:
     return orientation
 
 
-def get_position(msg='Digite a posição inicial da embarcação, EX: B1: ') -> list:
+def get_position(msg='Digite a posição inicial da embarcação, EX: B1: ', orientation='d', siz='1') -> list:
     A = 65
     coo = ['A', 0]
     while True:
         poss = input(msg).upper()
-        if len(poss) == 2 and poss[0].isalpha() and poss[1].isdigit():
-            coo[0], coo[1] = ord(poss[0]) - A, int(poss[1])
+        print(poss[1:])
+        if poss[0].isalpha() and poss[1:].isdigit():
+            coo[0], coo[1] = ord(poss[0]) - A, int(poss[1:])
 
-            if 0 < coo[1] < 13 and 0 < coo[0] < 13:
-                break
+            print(orientation, siz, 14 - siz)
+            if orientation == 'd':
+                if 0 < coo[1] < 13 and 0 < coo[0] < 13:
+                    break
+            elif orientation == 'H':
+                if 0 < coo[1] < 14 - siz and 0 < coo[0] < 13:
+                    break
             else:
-                print('Possição invalida, tente novamente')
+                if 0 < coo[1] < 13 and 0 < coo[0] < 14 - siz:
+                    break
+
+            print('Possição invalida, tente novamente')
         else:
             print('Possição invalida, tente novamente')
 
@@ -156,7 +165,7 @@ def init():
         '''
 
         enbacations = {
-            'subimarinos': [2, 1]}
+            'subimarinos': [2, 4]}
 
         print('Batalha naval')
         print('Peenchar sua mapa de defesa')
@@ -166,14 +175,16 @@ def init():
             print('Peenchar os ' + e + ' ')
             j = 0
             while enbacations[e][1] != j:
-                orientation, poss = get_orientation(), get_position()
+                siz = enbacations[e][0]
+                orientation = get_orientation()
+                poss = get_position(orientation=orientation, siz=siz)
 
-                if server.set_poss(login, enbacations[e][0], poss, orientation):
-                    for i in range(enbacations[e][0]):
+                if server.set_poss(login, siz, poss, orientation):
+                    for i in range(siz):
                         if orientation == 'V':
-                            map_def[poss[0] + i][poss[1]] = enbacations[e][0]
+                            map_def[poss[0] + i][poss[1]] = siz
                         else:
-                            map_def[poss[0]][poss[1] + i] = enbacations[e][0]
+                            map_def[poss[0]][poss[1] + i] = siz
                     print_map(map_def, visible=True)
                     j += 1
                 else:
