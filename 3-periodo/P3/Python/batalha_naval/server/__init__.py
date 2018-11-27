@@ -123,7 +123,7 @@ def get_maps(login: int) -> [list, list]:
     return maps[atk], maps[login]
 
 
-def played(login: int, poss: list) -> bool:
+def played(login: int, poss: list):
     global maps
     atk = next(login)
 

@@ -112,7 +112,7 @@ def get_position(msg='Digite a posição inicial da embarcação, EX: B1: ', ori
 
 def game(msg: str, login: int):
     global server, map_atk, map_def
-    if('Aguardando o outro jogador...'):
+    if(msg == 'Aguardando o outro jogador...'):
         print(msg)
         while True:
             if server.waiting():
@@ -132,7 +132,8 @@ def game(msg: str, login: int):
             poss = get_position(
                 msg='Sua vez, escolhar um bloco para atacar, EX: B1: ')
             result, map_atk, map_def = server.played(login, poss)
-            print(result)
+
+            print('Bem no alvo!' if result else 'Errou')  
 
             if server.check_winner(login):
                 break
@@ -165,7 +166,7 @@ def init():
         '''
 
         enbacations = {
-            'subimarinos': [2, 4]}
+            'subimarinos': [2, 1]}
 
         print('Batalha naval')
         print('Peenchar sua mapa de defesa')
