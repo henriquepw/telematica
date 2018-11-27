@@ -61,17 +61,21 @@ def set_poss(player, siz, poss, orientation) -> bool:
     print('Posição: ', poss)
     print('Orientação ', orientation)
 
-    length = (poss[0] - 1, poss[0] + siz)
-    width = (poss[1] - 1, poss[1] + 3)
+    length = (poss[0] - 1, poss[0] + 3)
+    width = (poss[1] - 1, poss[1] + siz)
 
-    if orientation == 'V':
+    if orientation == 'H':
         length, width = width, length
 
     print_map(maps[player])
     for i in range(width[0], width[1]):
         for j in range(length[0], length[1]):
-            if maps[player][i][j] != 0 and maps[player][i][j] != -1:
+            print('i: ', i, 'j: ', j)
+            print('Poss: ', maps[player][i][j])
+            if maps[player][j][i] != 0 and maps[player][j][i] != -1:
                 return False
+
+        print()
 
     for i in range(siz):
         print('I: ', i)

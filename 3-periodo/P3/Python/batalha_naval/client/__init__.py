@@ -97,10 +97,10 @@ def get_position(msg='Digite a posição inicial da embarcação, EX: B1: ', ori
                 if 0 < coo[1] < 13 and 0 < coo[0] < 13:
                     break
             elif orientation == 'H':
-                if 0 < coo[1] < 14 - siz and 0 < coo[0] < 13:
+                if 0 < coo[1] < (14 - siz )and 0 < coo[0] < 13:
                     break
-            else:
-                if 0 < coo[1] < 13 and 0 < coo[0] < 14 - siz:
+            elif orientation == 'V':
+                if 0 < coo[1] < 13 and 0 < coo[0] < (14 - siz):
                     break
 
             print('Possição invalida, tente novamente')
@@ -166,7 +166,7 @@ def init():
         '''
 
         enbacations = {
-            'subimarinos': [2, 1]}
+            'subimarinos': [2, 10]}
 
         print('Batalha naval')
         print('Peenchar sua mapa de defesa')
