@@ -12,12 +12,12 @@ TAM = 14
 
 def print_block(block, visible):
     if block == 1:
-        print('\033[7;31m[X]\033[m ', end='')
+        print('\033[7;31m[-]\033[m ', end='')
     elif block == 6:
-        print('\033[7;92m[V]\033[m ', end='')
+        print('\033[7;92m[X]\033[m ', end='')
     else:
-        if visible:
-            print('\033[7;94m[', block, ']\033[m ', end='')
+        if visible and block in (2, 3, 4, 5):
+            print('\033[7;94m[{}]\033[m '.format(block), end='')
         else:
             print('\033[7;94m[ ]\033[m ', end='')
 
@@ -83,21 +83,20 @@ def get_orientation() -> chr:
     return orientation
 
 
-def get_position(msg='Digite a posição inicial da embarcação, EX: B1: ', orientation='d', siz='1') -> list:
+def get_position(msg='Digite a posição inicial da embarcação, EX: B1: ', orientation='d', siz=1) -> list:
     A = 65
     coo = ['A', 0]
     while True:
         poss = input(msg).upper()
-        print(poss[1:])
+        
         if poss[0].isalpha() and poss[1:].isdigit():
             coo[0], coo[1] = ord(poss[0]) - A, int(poss[1:])
 
-            print(orientation, siz, 14 - siz)
             if orientation == 'd':
                 if 0 < coo[1] < 13 and 0 < coo[0] < 13:
                     break
             elif orientation == 'H':
-                if 0 < coo[1] < (14 - siz )and 0 < coo[0] < 13:
+                if 0 < coo[1] < (14 - siz) and 0 < coo[0] < 13:
                     break
             elif orientation == 'V':
                 if 0 < coo[1] < 13 and 0 < coo[0] < (14 - siz):
@@ -166,7 +165,7 @@ def init():
         '''
 
         enbacations = {
-            'subimarinos': [2, 10]}
+            'subimarinos': [2, 1]}
 
         print('Batalha naval')
         print('Peenchar sua mapa de defesa')
@@ -192,6 +191,7 @@ def init():
                     print('Posição invalida.')
 
         game(server.ready(login), login)
+    
     else:
         print('Sem vagas')
 
@@ -205,8 +205,11 @@ def init():
      3 = 3x Cruzadores
      4 = 2x Encouraçados 
      5 = 1x Porta-aviões
-     6 = Tiro Certo, 0
+     6 = Tiro Certo
 '''
+
 if __name__ == '__main__':
+    ip = input('Digite o ip do servidor: ')
+    server = xmlrpc.client.ServerProxy('http://'+ ip +':9999')
     map_def, map_atk = init_maps()
     init()
