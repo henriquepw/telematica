@@ -2,16 +2,16 @@ from xmlrpc.server import SimpleXMLRPCServer
 from copy import deepcopy
 from typing import Tuple
 import threading as th
+import socket
 import time
 
 
 missed = (-1, 1, 6, 0)
 valid = (2, 3, 4, 5)
-maps = []
-players = []
-winner = -1
-turn = 0
-TAM = 14
+maps, players, ips = [], [], []
+winner, turn = -1, 0
+TAM, C_PORT = 14, 8888
+RESPONSE = 'Pronto'
 
 
 def next(value=turn) -> int:
@@ -33,7 +33,17 @@ def get_players()-> int:
 def set_turn(value: int) -> int:
     global turn
     turn = value
+    print('Socket - {}:{}'.format(ips[value], C_PORT + value))
+
+    send_response(value)
     return turn
+
+
+def send_response(value: int):
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client.connect((ips[value], C_PORT + value))
+    client.send(bytes(RESPONSE, 'utf8'))
+    client.close()
 
 
 def init_maps() -> list:
@@ -67,15 +77,10 @@ def set_poss(player, siz, poss, orientation) -> bool:
     if orientation == 'H':
         length, width = width, length
 
-    print_map(maps[player])
     for i in range(width[0], width[1]):
         for j in range(length[0], length[1]):
-            print('i: ', i, 'j: ', j)
-            print('Poss: ', maps[player][i][j])
             if maps[player][j][i] != 0 and maps[player][j][i] != -1:
                 return False
-
-        print()
 
     for i in range(siz):
         print('I: ', i)
@@ -90,19 +95,24 @@ def set_poss(player, siz, poss, orientation) -> bool:
 
 def ready(player: int) -> str:
     global players
+    other = next(player)
     players[player] = True
     if len(players) == 2:
         if players[0] and players[1]:
+            send_response(other)
             return 'Jogadores prontos'
 
     print('Jogador ', player + 1, ' esta pronto.')
     return 'Aguardando o outro jogador...'
 
 
-def login() -> int:
-    global players
+def login(ip: str) -> int:
+    global players, ips
     if len(players) < 2:
         players.append(False)
+        ips.append(ip)
+
+        print('Jogador {} - {} conectado'.format(len(players), ip))
         return len(players) - 1
 
     return -1

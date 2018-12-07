@@ -1,13 +1,43 @@
 import time
+import socket
 import xmlrpc.client
 from copy import deepcopy
 from typing import Tuple
 
 server = xmlrpc.client.ServerProxy('http://localhost:9999')
+skt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 map_def = []
 map_atk = []
 TAM = 14
+BUFF = 6
+IP, PORT = '0.0.0.0', 8888
+
+
+def start_socket(login):
+    global skt, PORT
+    skt = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    PORT = PORT + login
+    skt.bind((IP, PORT))
+    skt.listen(socket.SOMAXCONN)
+
+
+def recv_respose():
+    client_skt, addr = skt.accept()
+    respose = client_skt.recv(BUFF).decode('utf-8')
+    
+    client_skt.close()
+    return respose
+
+
+def get_ip() -> str:
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(('8.8.8.8', 80))
+
+    ip = s.getsockname()[0]
+
+    s.close()
+    return ip
 
 
 def print_block(block, visible):
@@ -88,7 +118,7 @@ def get_position(msg='Digite a posição inicial da embarcação, EX: B1: ', ori
     coo = ['A', 0]
     while True:
         poss = input(msg).upper()
-        
+
         if poss[0].isalpha() and poss[1:].isdigit():
             coo[0], coo[1] = ord(poss[0]) - A, int(poss[1:])
 
@@ -114,9 +144,15 @@ def game(msg: str, login: int):
     if(msg == 'Aguardando o outro jogador...'):
         print(msg)
         while True:
+            if recv_respose() == 'Pronto':
+                break
+
+        '''
+        while True:
             if server.waiting():
                 break
             time.sleep(2)
+        '''
 
     # Pronto pra jogar -----
     print('Todos prontos')
@@ -124,7 +160,8 @@ def game(msg: str, login: int):
         if server.get_winner() != -1 or server.get_players() == 0:
             break
 
-        if (server.get_turn() == login):
+        if server.get_turn() == login:
+        # if recv_respose() == 'Pronto':
             map_atk, map_def = server.get_maps(login)
             print_maps()
 
@@ -132,7 +169,7 @@ def game(msg: str, login: int):
                 msg='Sua vez, escolhar um bloco para atacar, EX: B1: ')
             result, map_atk, map_def = server.played(login, poss)
 
-            print('Bem no alvo!' if result else 'Errou')  
+            print('Bem no alvo!' if result else 'Errou')
 
             if server.check_winner(login):
                 break
@@ -140,8 +177,9 @@ def game(msg: str, login: int):
             server.set_turn(server.next(login))
             print_maps()
             print('Aguardando')
-        else:  # esperando
-            time.sleep(2)
+        elif recv_respose() == 'Pronto':  # esperando
+            continue
+        #    time.sleep(2)
 
     print('Fim do jogo')
     if server.get_winner() == login:
@@ -149,12 +187,15 @@ def game(msg: str, login: int):
     else:
         print('Derrota')
 
+    server.set_turn(server.next(login))
     server.reset()
 
 
 def init():
     global server, map_def
-    login = server.login()
+    login = server.login(IP)
+    start_socket(login)
+
     if login > -1:
         '''
         enbacations = {
@@ -176,8 +217,8 @@ def init():
             j = 0
             while enbacations[e][1] != j:
                 siz = enbacations[e][0]
-                orientation = get_orientation()
-                poss = get_position(orientation=orientation, siz=siz)
+                orientation = 'v' # get_orientation()
+                poss = [ord('B') - ord('A'), 1] # get_position(orientation=orientation, siz=siz)
 
                 if server.set_poss(login, siz, poss, orientation):
                     for i in range(siz):
@@ -191,7 +232,7 @@ def init():
                     print('Posição invalida.')
 
         game(server.ready(login), login)
-    
+
     else:
         print('Sem vagas')
 
@@ -209,7 +250,8 @@ def init():
 '''
 
 if __name__ == '__main__':
-    ip = input('Digite o ip do servidor: ')
-    server = xmlrpc.client.ServerProxy('http://'+ ip +':9999')
+    ip = 'localhost' # input('Digite o ip do servidor: ')
+    server = xmlrpc.client.ServerProxy('http://' + ip + ':9999')
     map_def, map_atk = init_maps()
+    IP = get_ip()
     init()

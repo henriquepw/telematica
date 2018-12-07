@@ -1,4 +1,4 @@
 {
-    "python.pythonPath": "/usr/bin/python3.7",
+    "python.pythonPath": "E:\\ProgramData\\Anaconda3\\python.exe",
     "python.linting.pylintEnabled": false
 }
