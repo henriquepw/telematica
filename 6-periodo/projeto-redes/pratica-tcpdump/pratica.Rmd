@@ -1,9 +1,11 @@
 ---
 title: "Pratica TCPDump"
-output: html_notebook
+output:
+  pdf_document: default
+  html_notebook: default
 ---
 
-#### Descrićão da coleta dos dados
+#### **Descrićão da coleta dos dados**
 
 - Aplicativos
   - Chamada de audio (Discord)
@@ -15,25 +17,92 @@ output: html_notebook
 - Requisitos de QoS
 - Caga de Tráfego
 
-#### Dados Coletados
+#### **Dados Coletados**
 
 ```{r}
 data <- read.csv("vazao.csv")
+
+head(data)
 ```
 
-#### Graficos de Bits/s
+#### **Graficos de Bits/s**
+
+##### Histograma
 ```{r}
-plot(x = data$time, y = data$bits, xlab = "Segundos", ylab = "Bits")
+hist(data$bits, breaks = 100)
 ```
 
+##### Scatterplot
+```{r}
+plot(
+  x = data$time, 
+  y = data$bits, 
+  xlab = "Segundos", 
+  ylab = "Bits", 
+  main = "Bits/s", 
+  pch = 5, 
+  ylim = c(10e5, 10e6), 
+  lwd = 0.8
+)
 
+abline(lm(data$bits~data$time), col="red", lwd = 2)
+lines(lowess(data$time,data$bits), col="blue", lwd = 2)
+```
 
-#### Graficos de Pacotes/s
+##### CDF
+```{r}
+plot(ecdf(data$bits), xlim=c(10e5, 10e6), main = "CDF Bits/s", cex = 0)
+```
+
+##### Sumário (Quartis)
 ```{r}
 
 ```
 
-#### Assumindo outros 100 usuários de comportamentos idênticos ao do tráfego
+##### Ajustes de distribuições
+```{r}
+
+```
+
+#### **Graficos de Pacotes/s**
+
+##### Histograma
+```{r}
+hist(data$packets, breaks = 100, xlab = "Pacotes")
+```
+
+##### Scatterplot
+```{r}
+plot(
+  x = data$time, 
+  y = data$packets, 
+  xlab = "Segundos", 
+  ylab = "Pacotes", 
+  main = "Pacotes/s", 
+  pch = 5, 
+  lwd = 0.8
+)
+
+abline(lm(data$packets~data$time), col="red", lwd = 2)
+lines(lowess(data$time,data$packets), col="blue", lwd = 2)
+```
+
+##### CDF
+```{r}
+plot(ecdf(data$packets), xlim=c(200, 1e3), main = "CDF Pacotes/s", cex = 0)
+```
+
+##### Sumário (Quartis)
+```{r}
+
+```
+
+##### Ajustes de distribuições
+```{r}
+
+```
+
+#### **Assumindo outros 100 usuários de comportamentos idênticos ao do tráfego**
 
 Segundo o tcpstat, em uma hora com o uso coletado, consome 1.8 GB, como pode ver na figura abaixo.
 
@@ -50,13 +119,7 @@ Assumindo 100 usuários com este mesmo uso de banda, em um mês consumiria em to
 bitsPerMonth * 100 / 1024
 ```
 
-```{r}
 
-```
+#### **Relação Bits/s e pacotes/s**
 
-#### Relação Bits/s e pacotes/s
-```{r}
-
-```
-
-hist(data) -> plot um histograma
+A quantidade de pacotes recebidos é proporcional a quantidade de bits requeridos, quanto mais pacotes sendo transitado, maior vai ser a largura de banda necessária para suprir a demanda.
