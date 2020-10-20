@@ -4,6 +4,14 @@ output:
   pdf_document: default
   html_notebook: default
 ---
+#### Link: https://github.com/henry-ns/telematica/tree/master/6-periodo/projeto-redes/pratica-tcpdump
+
+#### **Dados Coletados**
+```{r}
+data <- read.csv("vazao.csv")
+
+head(data)
+```
 
 #### **Descrićão da coleta dos dados**
 
@@ -14,16 +22,16 @@ output:
   - Navegando em site usando o google chrome
 - Portas
 - Tipo do fluxo
+```{r}
+  plot(data$time, data$tcp, type = "l", xlab = "Segundos", ylab="Pacotes")
+  lines(data$time, data$udp, pch=18, col="blue", type="l")
+  
+  
+  legend("topright", legend=c("TCP", "UDP"), col=c("black", "blue"), lty=1:2)
+```
+
 - Requisitos de QoS
 - Caga de Tráfego
-
-#### **Dados Coletados**
-
-```{r}
-data <- read.csv("vazao.csv")
-
-head(data)
-```
 
 #### **Graficos de Bits/s**
 
@@ -56,7 +64,7 @@ plot(ecdf(data$bits), xlim=c(10e5, 10e6), main = "CDF Bits/s", cex = 0)
 
 ##### Sumário (Quartis)
 ```{r}
-
+boxplot(data$bits/1024/1204, col="lightblue", ylab = "MB/s")
 ```
 
 ##### Ajustes de distribuições
@@ -94,7 +102,7 @@ plot(ecdf(data$packets), xlim=c(200, 1e3), main = "CDF Pacotes/s", cex = 0)
 
 ##### Sumário (Quartis)
 ```{r}
-
+boxplot(data$packets, col="lightblue", ylab = "Pacotes/s")
 ```
 
 ##### Ajustes de distribuições
